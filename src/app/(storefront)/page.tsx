@@ -91,7 +91,10 @@ export default async function HomePage() {
                       return <div className="absolute inset-0 bg-[var(--sage-tint)]/20" />
                     })()}
                     
-                    <div className="relative z-10 space-y-3">
+                    {/* Gradient Overlay for Text Legibility */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-[var(--forest-950)] via-[var(--forest-950)]/40 to-transparent pointer-events-none" />
+                    
+                    <div className="relative z-10 space-y-3 pointer-events-none">
                       <div className="flex flex-wrap gap-2 mb-4">
                         {tags.slice(0,2).map(tag => (
                           <Badge key={tag} variant="tag">{tag}</Badge>
@@ -105,12 +108,16 @@ export default async function HomePage() {
                       </p>
                       <div className="flex items-center justify-between pt-4">
                         <span className="font-medium">₹{product.price.toFixed(2)}</span>
-                        <Button asChild variant="link" className="text-[var(--terracotta-400)] p-0 h-auto font-medium tracking-wider uppercase text-xs">
-                          <Link href={`/product/${product.slug}`}>View Details &rarr;</Link>
-                        </Button>
+                        <span className="text-[var(--terracotta-400)] font-medium tracking-wider uppercase text-xs">
+                          View Details &rarr;
+                        </span>
                       </div>
                     </div>
                   </div>
+                  {/* Full Card Clickable Overlay */}
+                  <Link href={`/product/${product.slug}`} className="absolute inset-0 z-20">
+                    <span className="sr-only">View {product.name}</span>
+                  </Link>
                 </Card>
               )
             })}
