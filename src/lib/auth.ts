@@ -43,7 +43,7 @@ export const authOptions: NextAuthOptions = {
         const user = await prisma.user.findUnique({ where: { email: credentials.email } })
         
         if (user) {
-          const isMatch = await bcrypt.compare(credentials.password, user.passwordHash)
+          const isMatch = await bcrypt.compare(credentials.password, user.passwordHash || "")
           
           if (isMatch) {
             return {

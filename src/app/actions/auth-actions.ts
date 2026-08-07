@@ -70,7 +70,7 @@ export async function updatePassword(formData: FormData) {
     }
 
     // Verify current password with bcrypt, fallback to plaintext for legacy migration
-    const isMatch = await bcrypt.compare(currentPassword, user.passwordHash)
+    const isMatch = await bcrypt.compare(currentPassword, user.passwordHash || "")
     
     if (!isMatch && user.passwordHash !== currentPassword) {
       return { success: false, error: "Incorrect current password" }

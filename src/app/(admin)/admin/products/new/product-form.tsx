@@ -139,11 +139,11 @@ export function ProductForm({ categories, initialData }: { categories: any[], in
       }
 
       // Calculate lowest price for the base price
-      const validVariants = variants.filter(v => v.name && v.price)
+      const validVariants = variants.filter((v: any) => v.name && v.price)
       if (validVariants.length === 0) throw new Error("At least one valid variant is required.")
       
-      const parsedVariants = validVariants.map(v => ({ name: v.name, price: parseFloat(v.price) }))
-      const basePrice = Math.min(...parsedVariants.map(v => v.price))
+      const parsedVariants = validVariants.map((v: any) => ({ name: v.name, price: parseFloat(v.price) }))
+      const basePrice = Math.min(...parsedVariants.map((v: any) => v.price))
 
       // 2. Create or Update product
       const productPayload = {
@@ -286,7 +286,7 @@ export function ProductForm({ categories, initialData }: { categories: any[], in
           <h3 className="text-lg font-medium text-gray-900">Sizes / Variants</h3>
           <button type="button" onClick={addVariant} className="text-sm font-medium text-gray-900 hover:underline border border-gray-300 px-3 py-1 rounded-md">Add Size</button>
         </div>
-        {variants.map((variant, index) => (
+        {variants.map((variant: any, index: number) => (
           <div key={`var-${index}`} className="flex items-center gap-4">
             <div className="flex-1">
               <label className="block text-xs font-medium text-gray-700">Size Label (e.g. 30 ml)</label>
@@ -321,7 +321,7 @@ export function ProductForm({ categories, initialData }: { categories: any[], in
 
       <div className="space-y-4 pt-6 border-t border-gray-200">
         <h3 className="text-lg font-medium text-gray-900">Clinical Efficacy (3 Points)</h3>
-        {efficacy.map((item, index) => (
+        {efficacy.map((item: any, index: number) => (
           <div key={`eff-${index}`} className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="md:col-span-1">
               <label className="block text-xs font-medium text-gray-700">Point {index + 1} Title</label>
@@ -349,7 +349,7 @@ export function ProductForm({ categories, initialData }: { categories: any[], in
 
       <div className="space-y-4 pt-6 border-t border-gray-200">
         <h3 className="text-lg font-medium text-gray-900">The Daily Ritual (3 Steps)</h3>
-        {ritual.map((item, index) => (
+        {ritual.map((item: any, index: number) => (
           <div key={`rit-${index}`} className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="md:col-span-1">
               <label className="block text-xs font-medium text-gray-700">Step {index + 1} Title</label>
