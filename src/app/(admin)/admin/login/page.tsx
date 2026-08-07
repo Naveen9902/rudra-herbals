@@ -29,34 +29,42 @@ export default function AdminLogin() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8">
+    <div className="min-h-screen flex items-center justify-center bg-[var(--forest-950)] py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+      {/* Decorative gradient overlay */}
+      <div className="absolute inset-0 bg-gradient-to-tr from-[var(--sage-tint)]/10 to-transparent pointer-events-none" />
+
+      <div className="max-w-md w-full space-y-8 relative z-10 bg-[var(--forest-900)] p-10 rounded-2xl border border-[var(--border-subtle)] shadow-2xl">
         <div>
-          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-            Admin Login
+          <h2 className="mt-2 text-center text-3xl font-serif font-extrabold text-[var(--gold-400)] tracking-wide">
+            Apothecary Portal
           </h2>
+          <p className="mt-3 text-center text-sm text-[var(--sage-tint)] opacity-80">
+            Secure admin access for Rudra Herbals
+          </p>
         </div>
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-          {error && <div className="text-red-500 text-sm text-center">{error}</div>}
-          <div className="rounded-md shadow-sm -space-y-px">
+          {error && <div className="p-3 bg-red-900/30 border border-red-500/50 text-red-200 text-sm text-center rounded-md">{error}</div>}
+          <div className="space-y-4">
             <div>
+              <label className="block text-xs uppercase tracking-widest text-[var(--sage-tint)] mb-2 font-semibold">Email</label>
               <input
                 name="email"
                 type="email"
                 required
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-gray-500 focus:border-gray-500 focus:z-10 sm:text-sm"
-                placeholder="Email address"
+                className="appearance-none relative block w-full px-4 py-3 bg-[var(--forest-950)] border border-[var(--border-subtle)] placeholder-gray-500 text-[var(--ink-50)] rounded-md focus:outline-none focus:ring-1 focus:ring-[var(--terracotta-400)] focus:border-[var(--terracotta-400)] transition-colors sm:text-sm"
+                placeholder="admin@rudraherbals.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
             </div>
             <div>
+              <label className="block text-xs uppercase tracking-widest text-[var(--sage-tint)] mb-2 font-semibold">Password</label>
               <input
                 name="password"
                 type="password"
                 required
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-gray-500 focus:border-gray-500 focus:z-10 sm:text-sm"
-                placeholder="Password"
+                className="appearance-none relative block w-full px-4 py-3 bg-[var(--forest-950)] border border-[var(--border-subtle)] placeholder-gray-500 text-[var(--ink-50)] rounded-md focus:outline-none focus:ring-1 focus:ring-[var(--terracotta-400)] focus:border-[var(--terracotta-400)] transition-colors sm:text-sm"
+                placeholder="••••••••"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
@@ -66,9 +74,9 @@ export default function AdminLogin() {
           <div>
             <button
               type="submit"
-              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-gray-900 hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-900"
+              className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-bold uppercase tracking-widest rounded-md text-[var(--forest-950)] bg-[var(--terracotta-400)] hover:bg-[var(--terracotta-500)] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[var(--terracotta-400)] focus:ring-offset-[var(--forest-900)] transition-all shadow-lg hover:shadow-xl"
             >
-              Sign in
+              Enter Vault
             </button>
           </div>
         </form>
