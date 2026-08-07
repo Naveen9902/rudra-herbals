@@ -37,3 +37,51 @@ export async function registerUser(formData: FormData) {
     return { success: false, error: "Failed to register account" }
   }
 }
+
+import { getServerSession } from "next-auth"
+import { authOptions } from "@/lib/auth"
+
+export async function updatePassword(formData: FormData) {
+  try {
+    const session = await getServerSession(authOptions)
+    if (!session?.user?.email) {
+      return { success: false, error: "Unauthorized" }
+    }
+
+    const currentPassword = formData.get("currentPassword") as string
+    const newPassword = formData.get("newPassword") as string
+    const confirmPassword = formData.get("confirmPassword") as string
+
+    if (!currentPassword || !newPassword || !confirmPassword) {
+      return { success: false, error: "All fields are required" }
+    }
+
+    if (newPassword !== confirmPassword) {
+      return { success: false, error: "New passwords do not match" }
+    }
+
+    const user = await prisma.user.findUnique({
+      where: { email: session.user.email }
+    })
+
+    if (!user) {
+      return { success: false, error: "User not found" }
+    }
+
+    // In a real application, use bcrypt.compare
+    if (user.passwordHash !== currentPassword) {
+      return { success: false, error: "Incorrect current password" }
+    }
+
+    // Update password
+    await prisma.user.update({
+      where: { id: user.id },
+      data: { passwordHash: newPassword }
+    })
+
+    return { success: true }
+  } catch (error: any) {
+    console.error("Password update error:", error)
+    return { success: false, error: "Failed to update password" }
+  }
+}
