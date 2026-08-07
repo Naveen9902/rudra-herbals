@@ -19,12 +19,22 @@ export default async function ProductPage({
     where: { slug },
     include: {
       tags: { include: { tag: true } }
-    }
+    },
   })
 
   if (!product) {
     notFound()
   }
+
+  // Fetch 2 other products for the "Related Products" section
+  const relatedProducts = await prisma.product.findMany({
+    where: { 
+      isActive: true,
+      NOT: { id: product.id }
+    },
+    take: 2,
+    orderBy: { createdAt: 'desc' }
+  })
 
   return (
     <div className="bg-[var(--forest-900)] text-[var(--ink-50)] min-h-screen">
@@ -210,6 +220,56 @@ export default async function ProductPage({
           </div>
         </div>
       </section>
+
+      {/* Related Products Section */}
+      {relatedProducts.length > 0 && (
+        <section className="py-24 bg-[var(--forest-950)] border-t border-[var(--ink-50)]/5">
+          <div className="mx-auto max-w-7xl px-6">
+            <div className="flex justify-between items-end mb-12">
+              <div>
+                <h3 className="font-serif text-3xl text-[var(--gold-400)] mb-2">Complement Your Ritual</h3>
+                <p className="opacity-70 text-sm">Discover other formulations that work synergistically.</p>
+              </div>
+              <Button asChild variant="link" className="text-[var(--terracotta-400)] p-0 hidden md:flex">
+                <Link href="/shop">View All Products <ChevronRight className="h-4 w-4 ml-1" /></Link>
+              </Button>
+            </div>
+            
+            <div className="grid sm:grid-cols-2 gap-8 mb-8 md:mb-0">
+              {relatedProducts.map((p) => {
+                let imageUrl = ""
+                if (p.images) {
+                  try {
+                    imageUrl = JSON.parse(p.images)[0]
+                  } catch (e) {}
+                }
+
+                return (
+                  <Link key={p.id} href={`/product/${p.slug}`} className="group block bg-white/5 rounded-2xl p-6 border border-white/5 hover:bg-white/10 transition-colors">
+                    <div className="flex gap-6 items-center">
+                      <div className="w-24 h-24 bg-black/20 rounded-xl overflow-hidden shrink-0">
+                        {imageUrl ? (
+                          <img src={imageUrl} alt={p.name} className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity" />
+                        ) : (
+                          <div className="w-full h-full bg-black/40" />
+                        )}
+                      </div>
+                      <div>
+                        <h4 className="font-serif text-xl text-white mb-2">{p.name}</h4>
+                        <p className="text-[var(--gold-400)] font-medium">₹{p.price.toFixed(2)}</p>
+                      </div>
+                    </div>
+                  </Link>
+                )
+              })}
+            </div>
+            
+            <Button asChild variant="link" className="text-[var(--terracotta-400)] p-0 md:hidden mt-6">
+              <Link href="/shop">View All Products <ChevronRight className="h-4 w-4 ml-1" /></Link>
+            </Button>
+          </div>
+        </section>
+      )}
     </div>
   )
 }
