@@ -42,12 +42,8 @@ export default async function ShopPage({
 
   if (selectedRituals.length > 0) {
     andClauses.push({
-      tags: {
-        some: {
-          tag: {
-            label: { in: selectedRituals }
-          }
-        }
+      category: {
+        name: { in: selectedRituals }
       }
     })
   }
@@ -63,8 +59,8 @@ export default async function ShopPage({
     },
   })
 
-  // Get all unique tags for the filter sidebar
-  const allTags = await prisma.tag.findMany()
+  // Get all categories for the filter sidebar
+  const allCategories = await prisma.category.findMany({ orderBy: { name: 'asc' } })
   const allPotencies = ["Gentle", "Standard", "Reserve", "50ml", "100ml"]
 
   return (
@@ -84,7 +80,7 @@ export default async function ShopPage({
         <aside className="w-full md:w-64 shrink-0">
           <Suspense fallback={<div className="animate-pulse bg-[var(--forest-800)] h-96 rounded-xl"></div>}>
             <ShopFilters 
-              availableRituals={allTags.map(t => t.label)} 
+              availableRituals={allCategories.map(c => c.name)} 
               availablePotencies={allPotencies}
               selectedRituals={selectedRituals}
               selectedPotencies={selectedPotencies}
