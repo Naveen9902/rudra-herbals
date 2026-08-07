@@ -256,7 +256,7 @@ export function ProductForm({ categories }: { categories: any[] }) {
               />
             </div>
             <div className="flex-1">
-              <label className="block text-xs font-medium text-gray-700">Price ($)</label>
+              <label className="block text-sm font-medium text-gray-700">Price (₹)</label>
               <input 
                 type="number" 
                 min="0"

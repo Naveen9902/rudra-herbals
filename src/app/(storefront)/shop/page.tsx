@@ -126,7 +126,7 @@ export default async function ShopPage({
                       </p>
                     </div>
                     <div className="mt-auto pt-4 flex items-center justify-between border-t border-[var(--border-subtle)]">
-                      <span className="font-medium">${product.price.toFixed(2)}</span>
+                      <span className="font-medium">₹{product.price.toFixed(2)}</span>
                       <Button size="sm" className="h-9 px-4 text-xs font-semibold tracking-wider">
                         + Add to Ritual
                       </Button>

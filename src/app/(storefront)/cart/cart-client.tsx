@@ -77,7 +77,7 @@ export function CartClient() {
                 />
               </div>
               <div className="col-span-2 font-medium sm:text-right">
-                ${(item.price * item.quantity).toFixed(2)}
+                ₹{(item.price * item.quantity).toFixed(2)}
               </div>
             </div>
           ))
@@ -95,7 +95,7 @@ export function CartClient() {
             <div className="space-y-4 text-sm opacity-90">
               <div className="flex justify-between">
                 <span>Subtotal</span>
-                <span>${cart.getTotal().toFixed(2)}</span>
+                <span>₹{cart.getTotal().toFixed(2)}</span>
               </div>
               <div className="flex justify-between">
                 <span>Shipping</span>
@@ -109,7 +109,7 @@ export function CartClient() {
 
             <div className="flex justify-between items-center border-t border-white/10 pt-4 font-medium text-lg">
               <span>Total</span>
-              <span>${cart.getTotal().toFixed(2)}</span>
+              <span>₹{cart.getTotal().toFixed(2)}</span>
             </div>
 
             <Button 

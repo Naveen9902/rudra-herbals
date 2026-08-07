@@ -37,9 +37,9 @@ export function AddToCartActions({ product }: { product: Product }) {
     <div className="space-y-8">
       {/* Price Display */}
       <div className="flex items-end gap-4">
-        <span className="text-3xl font-medium">${currentPrice.toFixed(2)}</span>
+        <span className="text-3xl font-medium">₹{currentPrice.toFixed(2)}</span>
         {product.compareAtPrice && (
-          <span className="text-lg opacity-50 line-through pb-1">${product.compareAtPrice.toFixed(2)}</span>
+          <span className="text-lg opacity-50 line-through pb-1">₹{product.compareAtPrice.toFixed(2)}</span>
         )}
       </div>
 

@@ -33,7 +33,7 @@ export default async function CartPage() {
                 </div>
                 <h4 className="font-serif text-xl font-medium mb-2">{item.name}</h4>
                 <Button variant="link" className="text-[var(--terracotta-400)] font-semibold uppercase tracking-wider text-xs">
-                  <Link href={`/product/${item.slug}`}>View &ndash; ${item.price.toFixed(2)}</Link>
+                  <Link href={`/product/${item.slug}`}>View &ndash; ₹{item.price.toFixed(2)}</Link>
                 </Button>
               </div>
             ))}

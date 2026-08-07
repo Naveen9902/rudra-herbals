@@ -87,7 +87,7 @@ export default async function ProductPage({
             <div className="space-y-6">
               <AddToCartActions product={product} />
               <p className="text-sm opacity-60 text-center sm:text-left">
-                Complimentary expedited shipping on orders over $150.
+                Complimentary expedited shipping on orders over ₹150.
               </p>
             </div>
           </div>

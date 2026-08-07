@@ -94,7 +94,7 @@ export default async function AccountOverviewPage() {
                     <p className="opacity-60">{new Date(order.createdAt).toLocaleDateString()}</p>
                   </div>
                   <div className="text-right">
-                    <p className="font-medium">{new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(order.total)}</p>
+                    <p className="font-medium">₹{order.total.toFixed(2)}</p>
                     <span className="inline-flex items-center rounded-full bg-white/10 px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-white mt-1">
                       {order.status}
                     </span>

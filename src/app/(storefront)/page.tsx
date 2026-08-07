@@ -89,7 +89,7 @@ export default async function HomePage() {
                         {product.shortDescription}
                       </p>
                       <div className="flex items-center justify-between pt-4">
-                        <span className="font-medium">${product.price.toFixed(2)}</span>
+                        <span className="font-medium">₹{product.price.toFixed(2)}</span>
                         <Button asChild variant="link" className="text-[var(--terracotta-400)] p-0 h-auto font-medium tracking-wider uppercase text-xs">
                           <Link href={`/product/${product.slug}`}>View Details &rarr;</Link>
                         </Button>

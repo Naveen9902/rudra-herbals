@@ -35,7 +35,7 @@ export default async function AdminProductsPage() {
               <tr key={product.id} className="hover:bg-gray-50 transition-colors">
                 <td className="px-6 py-4 font-medium text-gray-900">{product.name}</td>
                 <td className="px-6 py-4 text-gray-600">{product.potency}</td>
-                <td className="px-6 py-4 text-gray-600">${product.price.toFixed(2)}</td>
+                <td className="px-6 py-4 text-gray-600">₹{product.price.toFixed(2)}</td>
                 <td className="px-6 py-4">
                   <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold ${product.isActive ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}`}>
                     {product.isActive ? 'Active' : 'Draft'}
