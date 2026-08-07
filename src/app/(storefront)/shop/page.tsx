@@ -45,7 +45,7 @@ export default async function ShopPage({
 
   // Get all unique tags for the filter sidebar
   const allTags = await prisma.tag.findMany()
-  const allPotencies = ["Gentle", "Standard", "Reserve"]
+  const allPotencies = ["Gentle", "Standard", "Reserve", "50ml", "100ml"]
 
   return (
     <div className="min-h-screen bg-[var(--forest-900)] text-[var(--ink-50)]">
