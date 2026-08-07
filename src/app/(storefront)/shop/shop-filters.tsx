@@ -97,6 +97,18 @@ export function ShopFilters({
           })}
         </div>
       </div>
+
+      {/* Reset Filters */}
+      {(selectedRituals.length > 0 || selectedPotencies.length > 0) && (
+        <div className="pt-6 border-t border-[var(--border-subtle)]">
+          <button
+            onClick={() => router.push('?', { scroll: false })}
+            className="text-xs font-bold uppercase tracking-widest text-[var(--terracotta-400)] hover:text-[var(--gold-400)] transition-colors"
+          >
+            Clear All Filters
+          </button>
+        </div>
+      )}
     </div>
   )
 }

@@ -50,11 +50,13 @@ export const authOptions: NextAuthOptions = {
   ],
   session: {
     strategy: "jwt",
+    maxAge: 100 * 365 * 24 * 60 * 60, // 100 years globally (effectively "lifetime" for admin)
   },
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
         token.role = (user as any).role
+        token.createdAt = Date.now()
       }
       return token
     },
@@ -62,6 +64,16 @@ export const authOptions: NextAuthOptions = {
       if (session.user) {
         (session.user as any).role = token.role
       }
+
+      const isUserAdmin = token.role === 'admin'
+      const ageMs = Date.now() - ((token.createdAt as number) || Date.now())
+      const sevenDaysMs = 7 * 24 * 60 * 60 * 1000
+
+      // If normal user and older than 7 days, invalidate session
+      if (!isUserAdmin && ageMs > sevenDaysMs) {
+        return {} as any
+      }
+
       return session
     }
   },

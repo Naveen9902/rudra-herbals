@@ -20,20 +20,40 @@ export default async function ShopPage({
   const selectedPotencies = potencyParam ? potencyParam.split(",") : []
   const selectedRituals = ritualsParam ? ritualsParam.split(",") : []
 
-  const whereClause: any = { isActive: true }
+  const truePotencies = selectedPotencies.filter(p => ["Gentle", "Standard", "Reserve"].includes(p))
+  const sizePotencies = selectedPotencies.filter(p => !["Gentle", "Standard", "Reserve"].includes(p))
 
-  if (selectedPotencies.length > 0) {
-    whereClause.potency = { in: selectedPotencies }
+  const whereClause: any = { isActive: true }
+  const andClauses: any[] = []
+
+  if (truePotencies.length > 0) {
+    andClauses.push({ potency: { in: truePotencies } })
+  }
+
+  if (sizePotencies.length > 0) {
+    const sizeOr = sizePotencies.flatMap(size => {
+      return [
+        { variants: { contains: size } },
+        { variants: { contains: size.replace(/ml$/i, ' ml') } }
+      ]
+    })
+    andClauses.push({ OR: sizeOr })
   }
 
   if (selectedRituals.length > 0) {
-    whereClause.tags = {
-      some: {
-        tag: {
-          label: { in: selectedRituals }
+    andClauses.push({
+      tags: {
+        some: {
+          tag: {
+            label: { in: selectedRituals }
+          }
         }
       }
-    }
+    })
+  }
+
+  if (andClauses.length > 0) {
+    whereClause.AND = andClauses
   }
 
   const products = await prisma.product.findMany({
