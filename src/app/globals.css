@@ -1,0 +1,91 @@
+@import "tailwindcss";
+
+:root {
+  /* Storefront Theme (Primary) */
+  --forest-950: #152119;
+  --forest-900: #1b2e22;
+  --forest-800: #25392c;
+  --forest-700: #2f4a3a;
+  --sage-tint: #3c5a47;
+  
+  --cream-50: #f7f3e9;
+  --cream-100: #efe8d8;
+  
+  --terracotta-400: #e8a87c;
+  --terracotta-500: #dd9568;
+  
+  --gold-400: #c9a227;
+  
+  --ink-50: #faf9f5;
+  --ink-900: #1a1a1a;
+  
+  --border-subtle: rgba(255, 255, 255, 0.12);
+
+  /* Account/Dashboard Theme (Secondary) */
+  --noir-950: #0e0e0e;
+  --parchment-overlay: rgba(237, 234, 227, 0.85); /* semi-transparent overlay */
+  --gold-accent: #d4af37;
+  --glass-panel: rgba(60, 60, 60, 0.55);
+
+  /* Default app background/foreground */
+  --background: var(--cream-50);
+  --foreground: var(--ink-900);
+}
+
+.dark-theme {
+  --background: var(--forest-900);
+  --foreground: var(--ink-50);
+}
+
+.account-theme {
+  --background: var(--noir-950);
+  --foreground: var(--ink-50);
+}
+
+@theme inline {
+  --color-forest-950: var(--forest-950);
+  --color-forest-900: var(--forest-900);
+  --color-forest-800: var(--forest-800);
+  --color-forest-700: var(--forest-700);
+  --color-sage-tint: var(--sage-tint);
+  --color-cream-50: var(--cream-50);
+  --color-cream-100: var(--cream-100);
+  --color-terracotta-400: var(--terracotta-400);
+  --color-terracotta-500: var(--terracotta-500);
+  --color-gold-400: var(--gold-400);
+  --color-gold-accent: var(--gold-accent);
+  --color-ink-50: var(--ink-50);
+  --color-ink-900: var(--ink-900);
+  --color-noir-950: var(--noir-950);
+  --color-parchment-overlay: var(--parchment-overlay);
+  --color-glass-panel: var(--glass-panel);
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-border: var(--border-subtle);
+
+  --font-sans: var(--font-sans);
+  --font-serif: var(--font-serif);
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  body {
+    background-color: var(--background);
+    background-image: 
+      radial-gradient(circle at 15% 50%, rgba(201, 162, 39, 0.03), transparent 25%),
+      radial-gradient(circle at 85% 30%, rgba(60, 90, 71, 0.05), transparent 25%);
+    color: var(--foreground);
+    font-family: var(--font-sans), sans-serif;
+    line-height: 1.6;
+    transition: background-color 0.5s ease, color 0.5s ease;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-serif), serif;
+  }
+}
+

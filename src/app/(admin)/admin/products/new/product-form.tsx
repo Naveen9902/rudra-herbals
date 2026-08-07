@@ -1,0 +1,233 @@
+"use client"
+
+import { useState } from "react"
+import { uploadImage, createProduct } from "@/app/actions/product-actions"
+import { useRouter } from "next/navigation"
+
+export function ProductForm({ categories }: { categories: any[] }) {
+  const router = useRouter()
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [error, setError] = useState("")
+  
+  const [formData, setFormData] = useState({
+    name: "",
+    slug: "",
+    shortDescription: "",
+    longDescription: "",
+    price: "",
+    potency: "Standard",
+    categoryId: categories.length > 0 ? categories[0].id : "",
+  })
+  
+  const [imageFile, setImageFile] = useState<File | null>(null)
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    const { name, value } = e.target
+    setFormData(prev => ({ ...prev, [name]: value }))
+  }
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setImageFile(e.target.files[0])
+    }
+  }
+
+  const generateSlug = () => {
+    if (formData.name) {
+      const slug = formData.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '')
+      setFormData(prev => ({ ...prev, slug }))
+    }
+  }
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setIsSubmitting(true)
+    setError("")
+
+    try {
+      let imageUrl = ""
+      
+      // 1. Upload image if present
+      if (imageFile) {
+        const data = new FormData()
+        data.append("image", imageFile)
+        const uploadResult = await uploadImage(data)
+        
+        if (uploadResult.success && uploadResult.url) {
+          imageUrl = uploadResult.url
+        } else {
+          throw new Error(uploadResult.error || "Failed to upload image")
+        }
+      } else {
+        throw new Error("Please upload a product image.")
+      }
+
+      // 2. Create product
+      const productResult = await createProduct({
+        ...formData,
+        price: parseFloat(formData.price),
+        images: JSON.stringify([imageUrl]),
+      })
+
+      if (productResult.success) {
+        router.push("/admin/products")
+        router.refresh()
+      } else {
+        throw new Error(productResult.error || "Failed to create product")
+      }
+    } catch (err: any) {
+      setError(err.message || "An unexpected error occurred.")
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
+
+  if (categories.length === 0) {
+    return (
+      <div className="p-4 bg-yellow-50 text-yellow-800 rounded-md">
+        <p>Warning: No categories found in the database. Please create a category first to add products.</p>
+        <p className="text-sm mt-2">You can use a database tool or Prisma Studio to add a category.</p>
+      </div>
+    )
+  }
+
+  return (
+    <form onSubmit={handleSubmit} className="space-y-6 max-w-2xl">
+      {error && (
+        <div className="p-4 bg-red-50 text-red-800 rounded-md">
+          {error}
+        </div>
+      )}
+      
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="space-y-2">
+          <label htmlFor="name" className="block text-sm font-medium text-gray-700">Product Name</label>
+          <input 
+            type="text" 
+            id="name" 
+            name="name" 
+            required 
+            value={formData.name} 
+            onChange={handleChange}
+            onBlur={generateSlug}
+            className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-gray-900 focus:outline-none focus:ring-1 focus:ring-gray-900"
+          />
+        </div>
+        
+        <div className="space-y-2">
+          <label htmlFor="slug" className="block text-sm font-medium text-gray-700">Slug</label>
+          <input 
+            type="text" 
+            id="slug" 
+            name="slug" 
+            required 
+            value={formData.slug} 
+            onChange={handleChange}
+            className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-gray-900 focus:outline-none focus:ring-1 focus:ring-gray-900"
+          />
+        </div>
+      </div>
+
+      <div className="space-y-2">
+        <label htmlFor="shortDescription" className="block text-sm font-medium text-gray-700">Short Description</label>
+        <input 
+          type="text" 
+          id="shortDescription" 
+          name="shortDescription" 
+          required 
+          value={formData.shortDescription} 
+          onChange={handleChange}
+          className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-gray-900 focus:outline-none focus:ring-1 focus:ring-gray-900"
+        />
+      </div>
+
+      <div className="space-y-2">
+        <label htmlFor="longDescription" className="block text-sm font-medium text-gray-700">Long Description</label>
+        <textarea 
+          id="longDescription" 
+          name="longDescription" 
+          required 
+          rows={4}
+          value={formData.longDescription} 
+          onChange={handleChange}
+          className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-gray-900 focus:outline-none focus:ring-1 focus:ring-gray-900"
+        />
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="space-y-2">
+          <label htmlFor="price" className="block text-sm font-medium text-gray-700">Price ($)</label>
+          <input 
+            type="number" 
+            id="price" 
+            name="price" 
+            min="0" 
+            step="0.01" 
+            required 
+            value={formData.price} 
+            onChange={handleChange}
+            className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-gray-900 focus:outline-none focus:ring-1 focus:ring-gray-900"
+          />
+        </div>
+
+        <div className="space-y-2">
+          <label htmlFor="potency" className="block text-sm font-medium text-gray-700">Potency</label>
+          <select 
+            id="potency" 
+            name="potency" 
+            required 
+            value={formData.potency} 
+            onChange={handleChange}
+            className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-gray-900 focus:outline-none focus:ring-1 focus:ring-gray-900"
+          >
+            <option value="Gentle">Gentle</option>
+            <option value="Standard">Standard</option>
+            <option value="Reserve">Reserve</option>
+          </select>
+        </div>
+
+        <div className="space-y-2">
+          <label htmlFor="categoryId" className="block text-sm font-medium text-gray-700">Category</label>
+          <select 
+            id="categoryId" 
+            name="categoryId" 
+            required 
+            value={formData.categoryId} 
+            onChange={handleChange}
+            className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-gray-900 focus:outline-none focus:ring-1 focus:ring-gray-900"
+          >
+            {categories.map(cat => (
+              <option key={cat.id} value={cat.id}>{cat.name}</option>
+            ))}
+          </select>
+        </div>
+      </div>
+
+      <div className="space-y-2">
+        <label htmlFor="image" className="block text-sm font-medium text-gray-700">Product Image</label>
+        <input 
+          type="file" 
+          id="image" 
+          name="image" 
+          accept="image/*" 
+          required 
+          onChange={handleImageChange}
+          className="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-gray-50 file:text-gray-700 hover:file:bg-gray-100"
+        />
+        {imageFile && (
+          <p className="text-sm text-gray-500 mt-2">Selected file: {imageFile.name}</p>
+        )}
+      </div>
+
+      <div className="pt-4 flex justify-end">
+        <button 
+          type="submit" 
+          disabled={isSubmitting}
+          className="inline-flex justify-center rounded-md border border-transparent bg-gray-900 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-gray-900/90 focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          {isSubmitting ? "Creating Product..." : "Create Product"}
+        </button>
+      </div>
+    </form>
+  )
+}
