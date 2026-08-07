@@ -8,9 +8,7 @@ export function AdminLogoutButton() {
   const router = useRouter()
 
   const handleLogout = async () => {
-    await signOut({ redirect: false })
-    router.push("/admin/login")
-    router.refresh()
+    await signOut({ callbackUrl: "/admin/login" })
   }
 
   return (
