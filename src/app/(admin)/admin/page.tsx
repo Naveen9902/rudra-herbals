@@ -2,7 +2,14 @@ import { prisma } from "@/lib/db"
 
 export default async function AdminDashboard() {
   const productCount = await prisma.product.count()
-  // const orderCount = await prisma.order.count() // Phase 6 Orders not fully modeled yet in mock
+  const orderCount = await prisma.order.count()
+  
+  const revenueAggregation = await prisma.order.aggregate({
+    _sum: {
+      total: true
+    }
+  })
+  const revenue = revenueAggregation._sum.total || 0
 
   return (
     <div className="space-y-6 animate-in fade-in">
@@ -15,11 +22,13 @@ export default async function AdminDashboard() {
         </div>
         <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
           <h3 className="text-sm font-medium text-gray-500 uppercase tracking-wider mb-2">Total Orders</h3>
-          <p className="text-4xl font-semibold text-gray-900">12</p>
+          <p className="text-4xl font-semibold text-gray-900">{orderCount}</p>
         </div>
         <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
           <h3 className="text-sm font-medium text-gray-500 uppercase tracking-wider mb-2">Revenue</h3>
-          <p className="text-4xl font-semibold text-gray-900">$1,240.00</p>
+          <p className="text-4xl font-semibold text-gray-900">
+            {new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(revenue)}
+          </p>
         </div>
       </div>
     </div>
