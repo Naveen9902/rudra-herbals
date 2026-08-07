@@ -92,6 +92,8 @@ model Product {
   potency          String // Gentle, Standard, Reserve
   isActive         Boolean  @default(true)
   images           String // JSON string of URLs
+  efficacy         String? // JSON string of array
+  ritual           String? // JSON string of array
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
 

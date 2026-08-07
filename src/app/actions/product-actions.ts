@@ -46,6 +46,8 @@ export async function createProduct(data: {
   potency: string
   categoryId: string
   images: string
+  efficacy?: string
+  ritual?: string
 }) {
   try {
     const product = await prisma.product.create({
@@ -58,6 +60,8 @@ export async function createProduct(data: {
         potency: data.potency,
         categoryId: data.categoryId,
         images: data.images, // JSON string of URLs e.g., '["/uploads/image.png"]'
+        efficacy: data.efficacy,
+        ritual: data.ritual,
         isActive: true,
       },
     })

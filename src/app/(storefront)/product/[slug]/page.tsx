@@ -106,33 +106,36 @@ export default async function ProductPage({
             <h2 className="font-serif text-3xl md:text-4xl text-[var(--gold-400)]">Clinical Efficacy</h2>
           </div>
           <div className="grid md:grid-cols-3 gap-12">
-            <div className="text-center space-y-4">
-              <div className="mx-auto w-16 h-16 rounded-full bg-[var(--forest-800)] flex items-center justify-center border border-[var(--border-subtle)]">
-                <FlaskConical className="h-6 w-6 text-[var(--terracotta-400)]" />
-              </div>
-              <h3 className="font-serif text-xl">Cold-Extracted</h3>
-              <p className="opacity-70 text-sm leading-relaxed max-w-xs mx-auto">
-                Processed below 118°F to preserve delicate volatile oils and therapeutic compounds.
-              </p>
-            </div>
-            <div className="text-center space-y-4">
-              <div className="mx-auto w-16 h-16 rounded-full bg-[var(--forest-800)] flex items-center justify-center border border-[var(--border-subtle)]">
-                <Leaf className="h-6 w-6 text-[var(--terracotta-400)]" />
-              </div>
-              <h3 className="font-serif text-xl">Bioavailable</h3>
-              <p className="opacity-70 text-sm leading-relaxed max-w-xs mx-auto">
-                Formulated with natural lipid carriers to ensure maximum cellular absorption.
-              </p>
-            </div>
-            <div className="text-center space-y-4">
-              <div className="mx-auto w-16 h-16 rounded-full bg-[var(--forest-800)] flex items-center justify-center border border-[var(--border-subtle)]">
-                <ShieldCheck className="h-6 w-6 text-[var(--terracotta-400)]" />
-              </div>
-              <h3 className="font-serif text-xl">Purity Tested</h3>
-              <p className="opacity-70 text-sm leading-relaxed max-w-xs mx-auto">
-                Rigorously screened for heavy metals, pesticides, and microbial contaminants.
-              </p>
-            </div>
+            {(() => {
+              let efficacyItems = [
+                { title: "Cold-Extracted", description: "Processed below 118°F to preserve delicate volatile oils and therapeutic compounds." },
+                { title: "Bioavailable", description: "Formulated with natural lipid carriers to ensure maximum cellular absorption." },
+                { title: "Purity Tested", description: "Rigorously screened for heavy metals, pesticides, and microbial contaminants." }
+              ]
+              if (product.efficacy) {
+                try {
+                  const parsed = JSON.parse(product.efficacy)
+                  if (Array.isArray(parsed) && parsed.length > 0) efficacyItems = parsed
+                } catch(e) {}
+              }
+
+              const icons = [FlaskConical, Leaf, ShieldCheck]
+
+              return efficacyItems.map((item, idx) => {
+                const Icon = icons[idx % icons.length]
+                return (
+                  <div key={idx} className="text-center space-y-4">
+                    <div className="mx-auto w-16 h-16 rounded-full bg-[var(--forest-800)] flex items-center justify-center border border-[var(--border-subtle)]">
+                      <Icon className="h-6 w-6 text-[var(--terracotta-400)]" />
+                    </div>
+                    <h3 className="font-serif text-xl">{item.title}</h3>
+                    <p className="opacity-70 text-sm leading-relaxed max-w-xs mx-auto">
+                      {item.description}
+                    </p>
+                  </div>
+                )
+              })
+            })()}
           </div>
         </div>
       </section>
@@ -151,33 +154,31 @@ export default async function ProductPage({
               <h2 className="font-serif text-4xl text-[var(--gold-400)]">The Daily Ritual</h2>
             </div>
             <div className="space-y-8">
-              <div className="flex gap-6">
-                <div className="shrink-0 w-10 h-10 rounded-full border border-[var(--terracotta-400)] text-[var(--terracotta-400)] flex items-center justify-center font-serif text-xl">
-                  1
-                </div>
-                <div>
-                  <h4 className="font-bold tracking-wide uppercase text-sm mb-1">Dose</h4>
-                  <p className="opacity-80 text-sm">Take one full dropper (1ml) or steep one teaspoon in warm water.</p>
-                </div>
-              </div>
-              <div className="flex gap-6">
-                <div className="shrink-0 w-10 h-10 rounded-full border border-[var(--terracotta-400)] text-[var(--terracotta-400)] flex items-center justify-center font-serif text-xl">
-                  2
-                </div>
-                <div>
-                  <h4 className="font-bold tracking-wide uppercase text-sm mb-1">Timing</h4>
-                  <p className="opacity-80 text-sm">Best consumed on an empty stomach, either first thing in the morning or 30 minutes before rest.</p>
-                </div>
-              </div>
-              <div className="flex gap-6">
-                <div className="shrink-0 w-10 h-10 rounded-full border border-[var(--terracotta-400)] text-[var(--terracotta-400)] flex items-center justify-center font-serif text-xl">
-                  3
-                </div>
-                <div>
-                  <h4 className="font-bold tracking-wide uppercase text-sm mb-1">Sustain</h4>
-                  <p className="opacity-80 text-sm">Adaptogens build cumulatively. Consistent daily use for 4-6 weeks yields optimal resilience.</p>
-                </div>
-              </div>
+              {(() => {
+                let ritualItems = [
+                  { title: "Dose", description: "Take one full dropper (1ml) or steep one teaspoon in warm water." },
+                  { title: "Timing", description: "Best consumed on an empty stomach, either first thing in the morning or 30 minutes before rest." },
+                  { title: "Sustain", description: "Adaptogens build cumulatively. Consistent daily use for 4-6 weeks yields optimal resilience." }
+                ]
+                if (product.ritual) {
+                  try {
+                    const parsed = JSON.parse(product.ritual)
+                    if (Array.isArray(parsed) && parsed.length > 0) ritualItems = parsed
+                  } catch(e) {}
+                }
+
+                return ritualItems.map((item, idx) => (
+                  <div key={idx} className="flex gap-6">
+                    <div className="shrink-0 w-10 h-10 rounded-full border border-[var(--terracotta-400)] text-[var(--terracotta-400)] flex items-center justify-center font-serif text-xl">
+                      {idx + 1}
+                    </div>
+                    <div>
+                      <h4 className="font-bold tracking-wide uppercase text-sm mb-1">{item.title}</h4>
+                      <p className="opacity-80 text-sm">{item.description}</p>
+                    </div>
+                  </div>
+                ))
+              })()}
             </div>
           </div>
         </div>

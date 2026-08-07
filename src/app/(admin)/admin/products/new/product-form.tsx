@@ -19,7 +19,31 @@ export function ProductForm({ categories }: { categories: any[] }) {
     categoryId: categories.length > 0 ? categories[0].id : "",
   })
   
+  const [efficacy, setEfficacy] = useState([
+    { title: "Cold-Extracted", description: "Processed below 118°F to preserve delicate volatile oils and therapeutic compounds." },
+    { title: "Bioavailable", description: "Formulated with natural lipid carriers to ensure maximum cellular absorption." },
+    { title: "Purity Tested", description: "Rigorously screened for heavy metals, pesticides, and microbial contaminants." }
+  ])
+
+  const [ritual, setRitual] = useState([
+    { title: "Dose", description: "Take one full dropper (1ml) or steep one teaspoon in warm water." },
+    { title: "Timing", description: "Best consumed on an empty stomach, either first thing in the morning or 30 minutes before rest." },
+    { title: "Sustain", description: "Adaptogens build cumulatively. Consistent daily use for 4-6 weeks yields optimal resilience." }
+  ])
+  
   const [imageFile, setImageFile] = useState<File | null>(null)
+
+  const handleEfficacyChange = (index: number, field: 'title' | 'description', value: string) => {
+    const newEfficacy = [...efficacy]
+    newEfficacy[index][field] = value
+    setEfficacy(newEfficacy)
+  }
+
+  const handleRitualChange = (index: number, field: 'title' | 'description', value: string) => {
+    const newRitual = [...ritual]
+    newRitual[index][field] = value
+    setRitual(newRitual)
+  }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target
@@ -67,6 +91,8 @@ export function ProductForm({ categories }: { categories: any[] }) {
         ...formData,
         price: parseFloat(formData.price),
         images: JSON.stringify([imageUrl]),
+        efficacy: JSON.stringify(efficacy),
+        ritual: JSON.stringify(ritual),
       })
 
       if (productResult.success) {
@@ -203,7 +229,63 @@ export function ProductForm({ categories }: { categories: any[] }) {
         </div>
       </div>
 
-      <div className="space-y-2">
+      <div className="space-y-4 pt-6 border-t border-gray-200">
+        <h3 className="text-lg font-medium text-gray-900">Clinical Efficacy (3 Points)</h3>
+        {efficacy.map((item, index) => (
+          <div key={`eff-${index}`} className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="md:col-span-1">
+              <label className="block text-xs font-medium text-gray-700">Point {index + 1} Title</label>
+              <input 
+                type="text" 
+                required
+                value={item.title} 
+                onChange={(e) => handleEfficacyChange(index, 'title', e.target.value)}
+                className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-gray-900 focus:outline-none focus:ring-1 focus:ring-gray-900"
+              />
+            </div>
+            <div className="md:col-span-2">
+              <label className="block text-xs font-medium text-gray-700">Description</label>
+              <input 
+                type="text" 
+                required
+                value={item.description} 
+                onChange={(e) => handleEfficacyChange(index, 'description', e.target.value)}
+                className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-gray-900 focus:outline-none focus:ring-1 focus:ring-gray-900"
+              />
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div className="space-y-4 pt-6 border-t border-gray-200">
+        <h3 className="text-lg font-medium text-gray-900">The Daily Ritual (3 Steps)</h3>
+        {ritual.map((item, index) => (
+          <div key={`rit-${index}`} className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="md:col-span-1">
+              <label className="block text-xs font-medium text-gray-700">Step {index + 1} Title</label>
+              <input 
+                type="text" 
+                required
+                value={item.title} 
+                onChange={(e) => handleRitualChange(index, 'title', e.target.value)}
+                className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-gray-900 focus:outline-none focus:ring-1 focus:ring-gray-900"
+              />
+            </div>
+            <div className="md:col-span-2">
+              <label className="block text-xs font-medium text-gray-700">Description</label>
+              <input 
+                type="text" 
+                required
+                value={item.description} 
+                onChange={(e) => handleRitualChange(index, 'description', e.target.value)}
+                className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-gray-900 focus:outline-none focus:ring-1 focus:ring-gray-900"
+              />
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div className="space-y-2 pt-6 border-t border-gray-200">
         <label htmlFor="image" className="block text-sm font-medium text-gray-700">Product Image</label>
         <input 
           type="file" 
