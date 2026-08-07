@@ -23,7 +23,15 @@ export default function Login() {
     if (result?.error) {
       setError("Invalid credentials")
     } else {
-      router.push("/account")
+      // Fetch session to determine role and route accordingly
+      const res = await fetch('/api/auth/session')
+      const session = await res.json()
+      
+      if (session?.user?.role === 'admin') {
+        router.push("/admin")
+      } else {
+        router.push("/account")
+      }
       router.refresh()
     }
   }
