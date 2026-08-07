@@ -24,6 +24,7 @@ export default async function AdminOrdersPage() {
                 <th className="px-6 py-4">Order ID</th>
                 <th className="px-6 py-4">Customer</th>
                 <th className="px-6 py-4">Date</th>
+                <th className="px-6 py-4">UTR (Ref)</th>
                 <th className="px-6 py-4">Status</th>
                 <th className="px-6 py-4 text-right">Total</th>
               </tr>
@@ -40,6 +41,9 @@ export default async function AdminOrdersPage() {
                   </td>
                   <td className="px-6 py-4 text-gray-600">
                     {new Date(order.createdAt).toLocaleDateString()}
+                  </td>
+                  <td className="px-6 py-4 text-gray-900 font-mono text-xs">
+                    {order.paymentRef || "-"}
                   </td>
                   <td className="px-6 py-4">
                     <OrderStatusSelect orderId={order.id} currentStatus={order.status} />
