@@ -79,8 +79,8 @@ export default async function ProductPage({
             
             
             <div className="border-l-2 border-[var(--terracotta-400)] pl-6 mb-10">
-              <p className="whitespace-pre-wrap text-lg opacity-90 leading-relaxed">
-                {product.longDescription}
+              <p className="text-lg opacity-90 leading-relaxed">
+                {product.shortDescription}
               </p>
             </div>
             
@@ -94,8 +94,25 @@ export default async function ProductPage({
         </div>
       </div>
 
+      {/* Detailed Description Section */}
+      <section className="py-24 border-t border-[var(--border-subtle)]">
+        <div className="mx-auto max-w-3xl px-6">
+          <div className="text-center mb-12">
+            <p className="text-xs font-bold uppercase tracking-widest text-[var(--terracotta-400)] mb-3">
+              The Details
+            </p>
+            <h2 className="font-serif text-3xl md:text-4xl text-[var(--gold-400)]">About the Formula</h2>
+          </div>
+          <div className="text-lg opacity-80 font-light">
+            <p className="whitespace-pre-wrap leading-loose">
+              {product.longDescription}
+            </p>
+          </div>
+        </div>
+      </section>
+
       {/* Clinical Efficacy Section */}
-      <section className="bg-[var(--forest-950)] py-24 mt-12 border-t border-[var(--border-subtle)]">
+      <section className="bg-[var(--forest-950)] py-24 border-t border-[var(--border-subtle)]">
         <div className="mx-auto max-w-7xl px-6">
           <div className="text-center mb-16">
             <h2 className="font-serif text-3xl md:text-4xl text-[var(--gold-400)]">Clinical Efficacy</h2>
