@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { uploadImage, createProduct, updateProduct } from "@/app/actions/product-actions"
 import { useRouter } from "next/navigation"
 
@@ -20,12 +20,16 @@ export function ProductForm({ categories, initialData }: { categories: any[], in
   })
   
   const [variants, setVariants] = useState(() => {
-    if (initialData?.variants) return JSON.parse(initialData.variants).map((v:any) => ({...v, price: String(v.price)}))
+    try {
+      if (initialData?.variants) return JSON.parse(initialData.variants).map((v:any) => ({...v, price: String(v.price)}))
+    } catch(e) {}
     return [{ name: "30 ml", price: "25.00" }]
   })
 
   const [efficacy, setEfficacy] = useState(() => {
-    if (initialData?.efficacy) return JSON.parse(initialData.efficacy)
+    try {
+      if (initialData?.efficacy) return JSON.parse(initialData.efficacy)
+    } catch(e) {}
     return [
       { title: "Cold-Extracted", description: "Processed below 118°F to preserve delicate volatile oils and therapeutic compounds." },
       { title: "Bioavailable", description: "Formulated with natural lipid carriers to ensure maximum cellular absorption." },
@@ -34,13 +38,35 @@ export function ProductForm({ categories, initialData }: { categories: any[], in
   })
 
   const [ritual, setRitual] = useState(() => {
-    if (initialData?.ritual) return JSON.parse(initialData.ritual)
+    try {
+      if (initialData?.ritual) return JSON.parse(initialData.ritual)
+    } catch(e) {}
     return [
       { title: "Dose", description: "Take one full dropper (1ml) or steep one teaspoon in warm water." },
       { title: "Timing", description: "Best consumed on an empty stomach, either first thing in the morning or 30 minutes before rest." },
       { title: "Sustain", description: "Adaptogens build cumulatively. Consistent daily use for 4-6 weeks yields optimal resilience." }
     ]
   })
+  
+  // Ensure state stays in sync if initialData changes or hydration fails
+  useEffect(() => {
+    if (initialData) {
+      setFormData({
+        name: initialData.name || "",
+        slug: initialData.slug || "",
+        shortDescription: initialData.shortDescription || "",
+        longDescription: initialData.longDescription || "",
+        potency: initialData.potency || "Standard",
+        categoryId: initialData.categoryId || (categories.length > 0 ? categories[0].id : ""),
+      })
+      
+      try {
+        if (initialData.variants) setVariants(JSON.parse(initialData.variants).map((v:any) => ({...v, price: String(v.price)})))
+        if (initialData.efficacy) setEfficacy(JSON.parse(initialData.efficacy))
+        if (initialData.ritual) setRitual(JSON.parse(initialData.ritual))
+      } catch(e) {}
+    }
+  }, [initialData, categories])
   
   const [imageFile, setImageFile] = useState<File | null>(null)
 
