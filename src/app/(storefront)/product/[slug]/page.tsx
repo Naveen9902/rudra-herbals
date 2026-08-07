@@ -79,7 +79,7 @@ export default async function ProductPage({
             
             
             <div className="border-l-2 border-[var(--terracotta-400)] pl-6 mb-10">
-              <p className="text-lg opacity-90 leading-relaxed">
+              <p className="whitespace-pre-wrap text-lg opacity-90 leading-relaxed">
                 {product.longDescription}
               </p>
             </div>
