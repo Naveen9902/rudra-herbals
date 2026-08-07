@@ -56,8 +56,15 @@ export default async function AccountOrdersPage() {
                     <p className="text-xs opacity-80 uppercase tracking-wider">Total</p>
                     <p className="font-medium text-[var(--gold-400)]">₹{order.total.toFixed(2)}</p>
                   </div>
-                  <div className={`px-4 py-1.5 rounded-full text-xs font-bold tracking-widest uppercase ${order.status === 'delivered' ? 'bg-green-900/50 text-green-400' : 'bg-[var(--gold-400)]/20 text-[var(--gold-400)]'}`}>
-                    {order.status}
+                  <div className={`px-4 py-1.5 rounded-full text-xs font-bold tracking-widest uppercase border 
+                    ${order.status === 'delivered' ? 'bg-white/5 border-white/10 text-white/50' : 
+                      order.status === 'paid' ? 'bg-green-900/30 border-green-500/30 text-green-400' : 
+                      order.status === 'shipped' ? 'bg-blue-900/30 border-blue-500/30 text-blue-400' : 
+                      order.status === 'cancelled' ? 'bg-red-900/30 border-red-500/30 text-red-400' : 
+                      'bg-[var(--gold-400)]/10 border-[var(--gold-400)]/30 text-[var(--gold-400)]'}`}>
+                    {order.status === 'pending' ? 'Pending Verification' : 
+                     order.status === 'paid' ? 'Payment Verified' : 
+                     order.status}
                   </div>
                 </div>
               </div>
