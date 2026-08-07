@@ -96,14 +96,14 @@ export default async function ProductPage({
 
       {/* Detailed Description Section */}
       <section className="py-24 border-t border-[var(--border-subtle)]">
-        <div className="mx-auto max-w-3xl px-6">
+        <div className="mx-auto max-w-4xl px-6">
           <div className="text-center mb-12">
             <p className="text-xs font-bold uppercase tracking-widest text-[var(--terracotta-400)] mb-3">
               The Details
             </p>
             <h2 className="font-serif text-3xl md:text-4xl text-[var(--gold-400)]">About the Formula</h2>
           </div>
-          <div className="text-lg opacity-80 font-light">
+          <div className="text-lg opacity-80 font-light text-center">
             <p className="whitespace-pre-wrap leading-loose">
               {product.longDescription}
             </p>
