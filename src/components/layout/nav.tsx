@@ -1,8 +1,13 @@
 import Link from "next/link"
 import { ShoppingCart, User, Menu } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { getServerSession } from "next-auth"
+import { authOptions } from "@/lib/auth"
+import { StorefrontLogoutButton } from "@/components/layout/storefront-logout-button"
 
-export function Nav() {
+export async function Nav() {
+  const session = await getServerSession(authOptions)
+
   return (
     <nav className="sticky top-0 z-50 w-full border-b border-[var(--border-subtle)] bg-[var(--forest-950)]/80 backdrop-blur supports-[backdrop-filter]:bg-[var(--forest-950)]/60 text-[var(--ink-50)]">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6">
@@ -19,9 +24,18 @@ export function Nav() {
         </div>
         
         <div className="flex items-center gap-4">
-          <Link href="/account" className="hidden md:flex hover:text-[var(--gold-400)] transition-colors">
-            <User className="h-5 w-5" />
-          </Link>
+          {session ? (
+            <>
+              <Link href="/account" className="hidden md:flex hover:text-[var(--gold-400)] transition-colors" title="My Account">
+                <User className="h-5 w-5" />
+              </Link>
+              <StorefrontLogoutButton />
+            </>
+          ) : (
+            <Link href="/login" className="hidden md:flex hover:text-[var(--gold-400)] transition-colors" title="Login">
+              <User className="h-5 w-5" />
+            </Link>
+          )}
           <Link href="/cart" className="hover:text-[var(--gold-400)] transition-colors">
             <ShoppingCart className="h-5 w-5" />
           </Link>
