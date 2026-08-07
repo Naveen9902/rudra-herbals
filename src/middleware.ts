@@ -10,9 +10,15 @@ export default withAuth(
   {
     callbacks: {
       authorized: ({ req, token }) => {
+        if (req.nextUrl.pathname === "/admin/login") {
+          return true;
+        }
         // Only allow logged in users for the paths matched below
         return !!token
       }
+    },
+    pages: {
+      signIn: "/admin/login",
     }
   }
 )
