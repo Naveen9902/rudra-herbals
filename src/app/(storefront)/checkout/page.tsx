@@ -48,7 +48,7 @@ export default function CheckoutPage() {
 
   return (
     <div className="bg-[var(--cream-50)] text-[var(--ink-900)] min-h-screen">
-      <div className="mx-auto max-w-7xl px-6 py-12 md:py-20 grid lg:grid-cols-12 gap-16">
+      <form id="checkout-form" onSubmit={handleCheckout} className="mx-auto max-w-7xl px-6 py-12 md:py-20 grid lg:grid-cols-12 gap-16">
         
         {/* Left Column: Forms */}
         <div className="lg:col-span-7 space-y-12">
@@ -66,14 +66,14 @@ export default function CheckoutPage() {
             </div>
           </header>
 
-          <form id="checkout-form" onSubmit={handleCheckout} className="space-y-10">
+          <div className="space-y-10">
             {/* Contact Info */}
             <section className="space-y-6">
               <h2 className="font-serif text-xl border-b border-[var(--ink-900)]/10 pb-4">Contact Information</h2>
               <div className="space-y-4">
-                <input required type="email" placeholder="Email Address" className="w-full bg-white border border-[var(--border-subtle)] px-4 py-3 rounded-lg focus:outline-none focus:border-[var(--terracotta-400)] text-sm" />
+                <input required type="email" name="email" placeholder="Email Address" className="w-full bg-white border border-[var(--border-subtle)] px-4 py-3 rounded-lg focus:outline-none focus:border-[var(--terracotta-400)] text-sm" />
                 <label className="flex items-center gap-2 text-sm opacity-80 cursor-pointer">
-                  <input type="checkbox" className="rounded text-[var(--terracotta-400)]" defaultChecked />
+                  <input type="checkbox" name="newsletter" className="rounded text-[var(--terracotta-400)]" defaultChecked />
                   Email me with news and offers
                 </label>
               </div>
@@ -83,15 +83,15 @@ export default function CheckoutPage() {
             <section className="space-y-6">
               <h2 className="font-serif text-xl border-b border-[var(--ink-900)]/10 pb-4">Shipping Address</h2>
               <div className="grid grid-cols-2 gap-4">
-                <input required type="text" placeholder="First Name" className="w-full bg-white border border-[var(--border-subtle)] px-4 py-3 rounded-lg focus:outline-none focus:border-[var(--terracotta-400)] text-sm" />
-                <input required type="text" placeholder="Last Name" className="w-full bg-white border border-[var(--border-subtle)] px-4 py-3 rounded-lg focus:outline-none focus:border-[var(--terracotta-400)] text-sm" />
-                <input required type="text" placeholder="Address" className="w-full bg-white border border-[var(--border-subtle)] px-4 py-3 rounded-lg focus:outline-none focus:border-[var(--terracotta-400)] text-sm col-span-2" />
-                <input type="text" placeholder="Apartment, suite, etc. (optional)" className="w-full bg-white border border-[var(--border-subtle)] px-4 py-3 rounded-lg focus:outline-none focus:border-[var(--terracotta-400)] text-sm col-span-2" />
-                <input required type="text" placeholder="City" className="w-full bg-white border border-[var(--border-subtle)] px-4 py-3 rounded-lg focus:outline-none focus:border-[var(--terracotta-400)] text-sm" />
-                <input required type="text" placeholder="Postal Code" className="w-full bg-white border border-[var(--border-subtle)] px-4 py-3 rounded-lg focus:outline-none focus:border-[var(--terracotta-400)] text-sm" />
+                <input required type="text" name="firstName" placeholder="First Name" className="w-full bg-white border border-[var(--border-subtle)] px-4 py-3 rounded-lg focus:outline-none focus:border-[var(--terracotta-400)] text-sm" />
+                <input required type="text" name="lastName" placeholder="Last Name" className="w-full bg-white border border-[var(--border-subtle)] px-4 py-3 rounded-lg focus:outline-none focus:border-[var(--terracotta-400)] text-sm" />
+                <input required type="text" name="address" placeholder="Address" className="w-full bg-white border border-[var(--border-subtle)] px-4 py-3 rounded-lg focus:outline-none focus:border-[var(--terracotta-400)] text-sm col-span-2" />
+                <input type="text" name="apartment" placeholder="Apartment, suite, etc. (optional)" className="w-full bg-white border border-[var(--border-subtle)] px-4 py-3 rounded-lg focus:outline-none focus:border-[var(--terracotta-400)] text-sm col-span-2" />
+                <input required type="text" name="city" placeholder="City" className="w-full bg-white border border-[var(--border-subtle)] px-4 py-3 rounded-lg focus:outline-none focus:border-[var(--terracotta-400)] text-sm" />
+                <input required type="text" name="postalCode" placeholder="Postal Code" className="w-full bg-white border border-[var(--border-subtle)] px-4 py-3 rounded-lg focus:outline-none focus:border-[var(--terracotta-400)] text-sm" />
               </div>
             </section>
-          </form>
+          </div>
         </div>
 
         {/* Right Column: Order Summary */}
@@ -140,7 +140,6 @@ export default function CheckoutPage() {
 
             <Button 
               type="submit"
-              form="checkout-form"
               disabled={isProcessing}
               size="lg" 
               className="w-full bg-[var(--forest-900)] text-[var(--ink-50)] hover:bg-[var(--forest-950)] mb-4"
@@ -154,7 +153,7 @@ export default function CheckoutPage() {
           </div>
         </div>
         
-      </div>
+      </form>
     </div>
   )
 }
