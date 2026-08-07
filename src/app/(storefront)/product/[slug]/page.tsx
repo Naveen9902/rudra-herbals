@@ -40,7 +40,22 @@ export default async function ProductPage({
           
           {/* Left Column: Image */}
           <div className="relative aspect-[4/5] bg-[var(--forest-950)] rounded-2xl overflow-hidden border border-[var(--border-subtle)]">
-            <div className="absolute inset-0 bg-gradient-to-tr from-[var(--sage-tint)]/20 to-transparent" />
+            {(() => {
+              try {
+                const images = JSON.parse(product.images || "[]")
+                if (images && images.length > 0) {
+                  return (
+                    <img 
+                      src={images[0]} 
+                      alt={product.name} 
+                      className="absolute inset-0 w-full h-full object-cover"
+                    />
+                  )
+                }
+              } catch (e) {}
+              return null
+            })()}
+            <div className="absolute inset-0 bg-gradient-to-tr from-[var(--sage-tint)]/20 to-transparent pointer-events-none" />
             {product.potency === 'Reserve' && (
               <div className="absolute top-6 left-6 z-10">
                 <Badge variant="reserve">Reserve Batch</Badge>
