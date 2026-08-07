@@ -17,10 +17,6 @@ export function Footer() {
           
           <div>
             <h3 className="font-bold uppercase tracking-widest text-xs mb-4 text-[var(--terracotta-400)]">Shop</h3>
-            <ul className="space-y-3 text-sm opacity-80">
-              <li><Link href="/shop?potency=Reserve" className="hover:text-[var(--gold-400)] transition-colors">Reserve Batch</Link></li>
-              <li><Link href="/shop?rituals=Adaptogenic" className="hover:text-[var(--gold-400)] transition-colors">Adaptogens</Link></li>
-              <li><Link href="/rituals" className="hover:text-[var(--gold-400)] transition-colors">Curated Rituals</Link></li>
               <li><Link href="/shop" className="hover:text-[var(--gold-400)] transition-colors">All Elixirs</Link></li>
             </ul>
           </div>
@@ -30,7 +26,6 @@ export function Footer() {
             <ul className="space-y-3 text-sm opacity-80">
               <li><Link href="/philosophy" className="hover:text-[var(--gold-400)] transition-colors">Our Philosophy</Link></li>
               <li><Link href="/sourcing" className="hover:text-[var(--gold-400)] transition-colors">Sourcing</Link></li>
-              <li><Link href="/sustainability" className="hover:text-[var(--gold-400)] transition-colors">Sustainability</Link></li>
               <li><Link href="/journal" className="hover:text-[var(--gold-400)] transition-colors">The Journal</Link></li>
             </ul>
           </div>
@@ -38,7 +33,6 @@ export function Footer() {
           <div>
             <h3 className="font-bold uppercase tracking-widest text-xs mb-4 text-[var(--terracotta-400)]">Support</h3>
             <ul className="space-y-3 text-sm opacity-80">
-              <li><Link href="/account" className="hover:text-[var(--gold-400)] transition-colors">Account Sanctuary</Link></li>
               <li><Link href="/consultations" className="hover:text-[var(--gold-400)] transition-colors">Consultations</Link></li>
               <li><Link href="/shipping-returns" className="hover:text-[var(--gold-400)] transition-colors">Shipping & Returns</Link></li>
               <li><Link href="/privacy-policy" className="hover:text-[var(--gold-400)] transition-colors">Privacy Policy</Link></li>
