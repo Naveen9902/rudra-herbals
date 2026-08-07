@@ -75,8 +75,21 @@ export default async function HomePage() {
                     </div>
                   )}
                   <div className="aspect-[4/5] bg-[var(--forest-900)] p-6 flex flex-col justify-end relative">
-                    {/* Placeholder image */}
-                    <div className="absolute inset-0 bg-[var(--sage-tint)]/20" />
+                    {(() => {
+                      try {
+                        const images = JSON.parse(product.images || "[]")
+                        if (images && images.length > 0) {
+                          return (
+                            <img 
+                              src={images[0]} 
+                              alt={product.name} 
+                              className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 opacity-80"
+                            />
+                          )
+                        }
+                      } catch (e) {}
+                      return <div className="absolute inset-0 bg-[var(--sage-tint)]/20" />
+                    })()}
                     
                     <div className="relative z-10 space-y-3">
                       <div className="flex flex-wrap gap-2 mb-4">

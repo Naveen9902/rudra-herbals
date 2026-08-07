@@ -46,6 +46,7 @@ export async function createProduct(data: {
   potency: string
   categoryId: string
   images: string
+  variants?: string
   efficacy?: string
   ritual?: string
 }) {
@@ -71,8 +72,8 @@ export async function createProduct(data: {
     revalidatePath("/shop")
     
     return { success: true, product }
-  } catch (error) {
+  } catch (error: any) {
     console.error("Error creating product:", error)
-    return { success: false, error: "Failed to create product" }
+    return { success: false, error: error.message || "Failed to create product" }
   }
 }

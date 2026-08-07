@@ -36,7 +36,7 @@ export function ProductForm({ categories }: { categories: any[] }) {
 
   const handleVariantChange = (index: number, field: 'name' | 'price', value: string) => {
     const newVariants = [...variants]
-    newVariants[index][field] = value
+    newVariants[index] = { ...newVariants[index], [field]: value }
     setVariants(newVariants)
   }
 

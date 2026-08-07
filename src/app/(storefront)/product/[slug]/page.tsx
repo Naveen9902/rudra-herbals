@@ -139,6 +139,21 @@ export default async function ProductPage({
       <section className="bg-[var(--forest-900)] py-24">
         <div className="mx-auto max-w-7xl px-6 grid md:grid-cols-2 gap-16 items-center">
           <div className="relative aspect-[4/3] bg-[var(--forest-800)] rounded-2xl overflow-hidden border border-[var(--border-subtle)]">
+            {(() => {
+              try {
+                const images = JSON.parse(product.images || "[]")
+                if (images && images.length > 0) {
+                  return (
+                    <img 
+                      src={images[0]} 
+                      alt={`${product.name} Ritual`}
+                      className="absolute inset-0 w-full h-full object-cover opacity-60"
+                    />
+                  )
+                }
+              } catch (e) {}
+              return null
+            })()}
             <div className="absolute inset-0 bg-gradient-to-bl from-[var(--terracotta-400)]/10 to-transparent" />
           </div>
           <div className="space-y-10">
