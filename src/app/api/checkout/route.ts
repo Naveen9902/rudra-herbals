@@ -50,8 +50,9 @@ export async function POST(req: Request) {
         line1: address.line1,
         line2: address.line2 || "",
         city: address.city,
-        state: address.state,
+        state: address.state || "Default State",
         postalCode: address.postalCode,
+        country: address.country || "IN", // Default to IN for India
       }
     })
 
@@ -83,6 +84,6 @@ export async function POST(req: Request) {
     
   } catch (error) {
     console.error("[CHECKOUT_ERROR]", error)
-    return new NextResponse("Internal error", { status: 500 })
+    return NextResponse.json({ error: "Internal error" }, { status: 500 })
   }
 }
