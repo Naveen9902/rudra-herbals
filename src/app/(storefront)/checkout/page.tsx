@@ -24,20 +24,31 @@ export default function CheckoutPage() {
     return null
   }
 
-  const handleCheckout = async (e: React.FormEvent) => {
+  const handleCheckout = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     setIsProcessing(true)
+
+    const formData = new FormData(e.currentTarget)
+    const addressData = {
+      line1: formData.get("address") as string,
+      line2: formData.get("apartment") as string,
+      city: formData.get("city") as string,
+      state: "CA", // Mock state for now
+      postalCode: formData.get("postalCode") as string,
+    }
 
     try {
       const res = await fetch("/api/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ items: cart.items }),
+        body: JSON.stringify({ 
+          items: cart.items,
+          address: addressData
+        }),
       })
       const data = await res.json()
       
       if (data.url) {
-        // If Stripe returns a URL, go there (or to our mock success)
         window.location.href = data.url
       }
     } catch (error) {
@@ -89,6 +100,24 @@ export default function CheckoutPage() {
                 <input type="text" name="apartment" placeholder="Apartment, suite, etc. (optional)" className="w-full bg-white border border-[var(--border-subtle)] px-4 py-3 rounded-lg focus:outline-none focus:border-[var(--terracotta-400)] text-sm col-span-2" />
                 <input required type="text" name="city" placeholder="City" className="w-full bg-white border border-[var(--border-subtle)] px-4 py-3 rounded-lg focus:outline-none focus:border-[var(--terracotta-400)] text-sm" />
                 <input required type="text" name="postalCode" placeholder="Postal Code" className="w-full bg-white border border-[var(--border-subtle)] px-4 py-3 rounded-lg focus:outline-none focus:border-[var(--terracotta-400)] text-sm" />
+              </div>
+            </section>
+
+            {/* Payment (Mock) */}
+            <section className="space-y-6">
+              <h2 className="font-serif text-xl border-b border-[var(--ink-900)]/10 pb-4">Payment</h2>
+              <div className="bg-white border border-[var(--border-subtle)] rounded-lg p-6 space-y-4">
+                <div className="flex gap-4">
+                  <input required type="text" name="cardNumber" placeholder="Card Number" pattern="\d{16}" maxLength={16} title="16 digit card number" className="w-full bg-white border border-[var(--border-subtle)] px-4 py-3 rounded-lg focus:outline-none focus:border-[var(--terracotta-400)] text-sm" />
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <input required type="text" name="cardExpiry" placeholder="MM/YY" pattern="\d{2}/\d{2}" maxLength={5} title="MM/YY format" className="w-full bg-white border border-[var(--border-subtle)] px-4 py-3 rounded-lg focus:outline-none focus:border-[var(--terracotta-400)] text-sm" />
+                  <input required type="text" name="cardCvc" placeholder="CVC" pattern="\d{3,4}" maxLength={4} title="3 or 4 digit CVC" className="w-full bg-white border border-[var(--border-subtle)] px-4 py-3 rounded-lg focus:outline-none focus:border-[var(--terracotta-400)] text-sm" />
+                </div>
+                <p className="text-xs opacity-60 mt-2">
+                  <Lock className="inline-block h-3 w-3 mr-1" />
+                  This is a mock checkout. Any number pattern works (e.g. 1111222233334444, 12/26, 123).
+                </p>
               </div>
             </section>
           </div>
