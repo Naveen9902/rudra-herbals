@@ -2,6 +2,7 @@ import { NextAuthOptions } from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials"
 import { prisma } from "@/lib/db"
 import { PrismaAdapter } from "@auth/prisma-adapter"
+import bcrypt from "bcryptjs"
 
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
@@ -35,12 +36,33 @@ export const authOptions: NextAuthOptions = {
 
         // Check the database for regular users
         const user = await prisma.user.findUnique({ where: { email: credentials.email } })
-        if (user && user.passwordHash === credentials.password) {
-          return {
-            id: user.id,
-            name: user.name,
-            email: user.email,
-            role: user.role
+        
+        if (user) {
+          const isMatch = await bcrypt.compare(credentials.password, user.passwordHash)
+          
+          if (isMatch) {
+            return {
+              id: user.id,
+              name: user.name,
+              email: user.email,
+              role: user.role
+            }
+          }
+          
+          // Legacy migration: If plain text matches, hash it and save it silently
+          if (user.passwordHash === credentials.password) {
+            const hashed = await bcrypt.hash(credentials.password, 10)
+            await prisma.user.update({
+              where: { id: user.id },
+              data: { passwordHash: hashed }
+            })
+            
+            return {
+              id: user.id,
+              name: user.name,
+              email: user.email,
+              role: user.role
+            }
           }
         }
         

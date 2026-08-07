@@ -1,6 +1,7 @@
 "use server"
 
 import { prisma } from "@/lib/db"
+import bcrypt from "bcryptjs"
 
 export async function registerUser(formData: FormData) {
   try {
@@ -20,13 +21,13 @@ export async function registerUser(formData: FormData) {
       return { success: false, error: "An account with this email already exists" }
     }
 
-    // In a real application, you should hash the password using bcrypt.
-    // We are using plain text here to match the simple setup in auth.ts.
+    const hashedPassword = await bcrypt.hash(password, 10)
+
     await prisma.user.create({
       data: {
         name,
         email,
-        passwordHash: password,
+        passwordHash: hashedPassword,
         role: "customer"
       }
     })
@@ -68,15 +69,19 @@ export async function updatePassword(formData: FormData) {
       return { success: false, error: "User not found" }
     }
 
-    // In a real application, use bcrypt.compare
-    if (user.passwordHash !== currentPassword) {
+    // Verify current password with bcrypt, fallback to plaintext for legacy migration
+    const isMatch = await bcrypt.compare(currentPassword, user.passwordHash)
+    
+    if (!isMatch && user.passwordHash !== currentPassword) {
       return { success: false, error: "Incorrect current password" }
     }
+
+    const hashedNewPassword = await bcrypt.hash(newPassword, 10)
 
     // Update password
     await prisma.user.update({
       where: { id: user.id },
-      data: { passwordHash: newPassword }
+      data: { passwordHash: hashedNewPassword }
     })
 
     return { success: true }
