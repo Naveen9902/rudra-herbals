@@ -1,6 +1,7 @@
 import Link from "next/link"
-import { LogOut, Package, RefreshCw, Settings, LayoutDashboard, ShoppingBag } from "lucide-react"
+import { Package, RefreshCw, Settings, LayoutDashboard, ShoppingBag } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { AccountLogoutButton } from "@/components/account/logout-button"
 
 export default function SanctuaryDashboardLayout({
   children,
@@ -44,9 +45,7 @@ export default function SanctuaryDashboardLayout({
           <Button asChild variant="outline" className="w-full border-white/10 text-white hover:bg-white/5">
             <Link href="/shop"><ShoppingBag className="h-4 w-4 mr-2" /> Apothecary Shop</Link>
           </Button>
-          <button className="flex w-full items-center gap-3 px-4 py-2 text-sm font-medium text-white/50 hover:text-white transition-colors">
-            <LogOut className="h-4 w-4" /> Logout
-          </button>
+          <AccountLogoutButton />
         </div>
       </aside>
 
