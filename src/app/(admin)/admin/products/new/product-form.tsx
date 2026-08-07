@@ -1,36 +1,46 @@
 "use client"
 
 import { useState } from "react"
-import { uploadImage, createProduct } from "@/app/actions/product-actions"
+import { uploadImage, createProduct, updateProduct } from "@/app/actions/product-actions"
 import { useRouter } from "next/navigation"
 
-export function ProductForm({ categories }: { categories: any[] }) {
+export function ProductForm({ categories, initialData }: { categories: any[], initialData?: any }) {
   const router = useRouter()
+  const isEdit = !!initialData
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError] = useState("")
   
   const [formData, setFormData] = useState({
-    name: "",
-    slug: "",
-    shortDescription: "",
-    longDescription: "",
-    potency: "Standard",
-    categoryId: categories.length > 0 ? categories[0].id : "",
+    name: initialData?.name || "",
+    slug: initialData?.slug || "",
+    shortDescription: initialData?.shortDescription || "",
+    longDescription: initialData?.longDescription || "",
+    potency: initialData?.potency || "Standard",
+    categoryId: initialData?.categoryId || (categories.length > 0 ? categories[0].id : ""),
   })
   
-  const [variants, setVariants] = useState([{ name: "30 ml", price: "25.00" }])
+  const [variants, setVariants] = useState(() => {
+    if (initialData?.variants) return JSON.parse(initialData.variants).map((v:any) => ({...v, price: String(v.price)}))
+    return [{ name: "30 ml", price: "25.00" }]
+  })
 
-  const [efficacy, setEfficacy] = useState([
-    { title: "Cold-Extracted", description: "Processed below 118°F to preserve delicate volatile oils and therapeutic compounds." },
-    { title: "Bioavailable", description: "Formulated with natural lipid carriers to ensure maximum cellular absorption." },
-    { title: "Purity Tested", description: "Rigorously screened for heavy metals, pesticides, and microbial contaminants." }
-  ])
+  const [efficacy, setEfficacy] = useState(() => {
+    if (initialData?.efficacy) return JSON.parse(initialData.efficacy)
+    return [
+      { title: "Cold-Extracted", description: "Processed below 118°F to preserve delicate volatile oils and therapeutic compounds." },
+      { title: "Bioavailable", description: "Formulated with natural lipid carriers to ensure maximum cellular absorption." },
+      { title: "Purity Tested", description: "Rigorously screened for heavy metals, pesticides, and microbial contaminants." }
+    ]
+  })
 
-  const [ritual, setRitual] = useState([
-    { title: "Dose", description: "Take one full dropper (1ml) or steep one teaspoon in warm water." },
-    { title: "Timing", description: "Best consumed on an empty stomach, either first thing in the morning or 30 minutes before rest." },
-    { title: "Sustain", description: "Adaptogens build cumulatively. Consistent daily use for 4-6 weeks yields optimal resilience." }
-  ])
+  const [ritual, setRitual] = useState(() => {
+    if (initialData?.ritual) return JSON.parse(initialData.ritual)
+    return [
+      { title: "Dose", description: "Take one full dropper (1ml) or steep one teaspoon in warm water." },
+      { title: "Timing", description: "Best consumed on an empty stomach, either first thing in the morning or 30 minutes before rest." },
+      { title: "Sustain", description: "Adaptogens build cumulatively. Consistent daily use for 4-6 weeks yields optimal resilience." }
+    ]
+  })
   
   const [imageFile, setImageFile] = useState<File | null>(null)
 
@@ -85,7 +95,7 @@ export function ProductForm({ categories }: { categories: any[] }) {
     setError("")
 
     try {
-      let imageUrl = ""
+      let imageUrl = initialData?.images ? JSON.parse(initialData.images)[0] : ""
       
       // 1. Upload image if present
       if (imageFile) {
@@ -98,7 +108,7 @@ export function ProductForm({ categories }: { categories: any[] }) {
         } else {
           throw new Error(uploadResult.error || "Failed to upload image")
         }
-      } else {
+      } else if (!isEdit) {
         throw new Error("Please upload a product image.")
       }
 
@@ -109,21 +119,28 @@ export function ProductForm({ categories }: { categories: any[] }) {
       const parsedVariants = validVariants.map(v => ({ name: v.name, price: parseFloat(v.price) }))
       const basePrice = Math.min(...parsedVariants.map(v => v.price))
 
-      // 2. Create product
-      const productResult = await createProduct({
+      // 2. Create or Update product
+      const productPayload = {
         ...formData,
         price: basePrice,
         variants: JSON.stringify(parsedVariants),
         images: JSON.stringify([imageUrl]),
         efficacy: JSON.stringify(efficacy),
         ritual: JSON.stringify(ritual),
-      })
+      }
+
+      let productResult;
+      if (isEdit) {
+        productResult = await updateProduct(initialData.id, productPayload)
+      } else {
+        productResult = await createProduct(productPayload)
+      }
 
       if (productResult.success) {
         router.push("/admin/products")
         router.refresh()
       } else {
-        throw new Error(productResult.error || "Failed to create product")
+        throw new Error(productResult.error || (isEdit ? "Failed to update product" : "Failed to create product"))
       }
     } catch (err: any) {
       setError(err.message || "An unexpected error occurred.")
@@ -348,15 +365,15 @@ export function ProductForm({ categories }: { categories: any[] }) {
         )}
       </div>
 
-      <div className="pt-4 flex justify-end">
-        <button 
-          type="submit" 
-          disabled={isSubmitting}
-          className="inline-flex justify-center rounded-md border border-transparent bg-gray-900 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-gray-900/90 focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          {isSubmitting ? "Creating Product..." : "Create Product"}
-        </button>
-      </div>
+        <div className="flex justify-end pt-4">
+          <button
+            type="submit"
+            disabled={isSubmitting}
+            className="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-950 disabled:pointer-events-none disabled:opacity-50 bg-gray-900 text-gray-50 shadow hover:bg-gray-900/90 h-9 px-8 py-2"
+          >
+            {isSubmitting ? (isEdit ? "Updating..." : "Creating...") : (isEdit ? "Update Product" : "Create Product")}
+          </button>
+        </div>
     </form>
   )
 }

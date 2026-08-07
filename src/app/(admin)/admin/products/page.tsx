@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/db"
 import Link from "next/link"
-import { Plus, Pencil, Trash2 } from "lucide-react"
+import { Plus } from "lucide-react"
+import { ProductRowActions } from "./product-actions"
 
 export default async function AdminProductsPage() {
   const products = await prisma.product.findMany({
@@ -41,13 +42,8 @@ export default async function AdminProductsPage() {
                     {product.isActive ? 'Active' : 'Draft'}
                   </span>
                 </td>
-                <td className="px-6 py-4 text-right space-x-2">
-                  <button className="text-gray-400 hover:text-gray-900 transition-colors">
-                    <Pencil className="h-4 w-4 inline" />
-                  </button>
-                  <button className="text-gray-400 hover:text-red-600 transition-colors">
-                    <Trash2 className="h-4 w-4 inline" />
-                  </button>
+                <td className="px-6 py-4 text-right">
+                  <ProductRowActions productId={product.id} />
                 </td>
               </tr>
             ))}

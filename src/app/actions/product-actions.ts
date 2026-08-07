@@ -77,3 +77,59 @@ export async function createProduct(data: {
     return { success: false, error: error.message || "Failed to create product" }
   }
 }
+
+export async function updateProduct(id: string, data: {
+  name: string
+  slug: string
+  shortDescription: string
+  longDescription: string
+  price: number
+  potency: string
+  categoryId: string
+  images?: string
+  variants?: string
+  efficacy?: string
+  ritual?: string
+}) {
+  try {
+    const product = await prisma.product.update({
+      where: { id },
+      data: {
+        name: data.name,
+        slug: data.slug,
+        shortDescription: data.shortDescription,
+        longDescription: data.longDescription,
+        price: data.price,
+        potency: data.potency,
+        categoryId: data.categoryId,
+        ...(data.images && { images: data.images }),
+        variants: data.variants,
+        efficacy: data.efficacy,
+        ritual: data.ritual,
+      },
+    })
+
+    revalidatePath("/admin/products")
+    revalidatePath("/shop")
+    revalidatePath(`/product/${product.slug}`)
+    
+    return { success: true, product }
+  } catch (error: any) {
+    console.error("Error updating product:", error)
+    return { success: false, error: error.message || "Failed to update product" }
+  }
+}
+
+export async function deleteProduct(id: string) {
+  try {
+    await prisma.product.delete({
+      where: { id }
+    })
+    revalidatePath("/admin/products")
+    revalidatePath("/shop")
+    return { success: true }
+  } catch (error: any) {
+    console.error("Error deleting product:", error)
+    return { success: false, error: error.message || "Failed to delete product" }
+  }
+}
