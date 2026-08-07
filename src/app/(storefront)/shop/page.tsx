@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge"
 import { Card } from "@/components/ui/card"
 import { ShopFilters } from "./shop-filters"
 
-export const dynamic = "force-dynamic"
+export const revalidate = 3600 // Revalidate every hour instead of every request to save Vercel compute
 
 export default async function ShopPage({
   searchParams,

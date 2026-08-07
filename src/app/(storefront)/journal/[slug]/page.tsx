@@ -3,7 +3,7 @@ import { notFound } from "next/navigation"
 import { ChevronLeft } from "lucide-react"
 import { prisma } from "@/lib/db"
 
-export const dynamic = "force-dynamic"
+export const revalidate = 3600
 
 export default async function JournalPostPage({
   params,

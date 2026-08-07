@@ -2,7 +2,7 @@ import Link from "next/link"
 import { prisma } from "@/lib/db"
 import { Card } from "@/components/ui/card"
 
-export const dynamic = "force-dynamic"
+export const revalidate = 3600
 
 export default async function JournalPage() {
   const posts = await prisma.journalPost.findMany({

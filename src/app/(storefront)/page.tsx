@@ -7,6 +7,8 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent } from "@/components/ui/card"
 
+export const revalidate = 3600
+
 export default async function HomePage() {
   const featuredProducts = await prisma.product.findMany({
     take: 4,

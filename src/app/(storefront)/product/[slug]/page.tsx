@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { AddToCartActions } from "./add-to-cart-actions"
 
-export const dynamic = "force-dynamic"
+export const revalidate = 3600
 
 export default async function ProductPage({
   params,
