@@ -17,6 +17,7 @@ export function Footer() {
           
           <div>
             <h3 className="font-bold uppercase tracking-widest text-xs mb-4 text-[var(--terracotta-400)]">Shop</h3>
+            <ul className="space-y-3 text-sm opacity-80">
               <li><Link href="/shop" className="hover:text-[var(--gold-400)] transition-colors">All Elixirs</Link></li>
             </ul>
           </div>
