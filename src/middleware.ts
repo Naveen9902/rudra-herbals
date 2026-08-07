@@ -5,8 +5,8 @@ import type { NextRequest } from "next/server"
 export async function middleware(req: NextRequest) {
   const path = req.nextUrl.pathname
 
-  // Allow unrestricted access to the login page
-  if (path === "/login") {
+  // Allow unrestricted access to the login and register pages
+  if (path === "/login" || path === "/register") {
     return NextResponse.next()
   }
 

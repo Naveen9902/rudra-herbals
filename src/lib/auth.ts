@@ -33,11 +33,16 @@ export const authOptions: NextAuthOptions = {
           }
         }
 
-        // Alternative: check the database
-        // const user = await prisma.user.findUnique({ where: { email: credentials.email } })
-        // if (user && user.passwordHash === credentials.password && user.role === 'admin') {
-        //   return user
-        // }
+        // Check the database for regular users
+        const user = await prisma.user.findUnique({ where: { email: credentials.email } })
+        if (user && user.passwordHash === credentials.password) {
+          return {
+            id: user.id,
+            name: user.name,
+            email: user.email,
+            role: user.role
+          }
+        }
         
         return null
       }
