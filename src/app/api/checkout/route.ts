@@ -27,7 +27,7 @@ export async function POST(req: Request) {
       userId = fallbackUser.id
     }
 
-    const { items, address } = await req.json()
+    const { items, address, utr } = await req.json()
 
     if (!items || items.length === 0) {
       return new NextResponse("Cart is empty", { status: 400 })
@@ -35,6 +35,10 @@ export async function POST(req: Request) {
 
     if (!address) {
       return new NextResponse("Address is required", { status: 400 })
+    }
+
+    if (!utr) {
+      return new NextResponse("Transaction ID (UTR) is required", { status: 400 })
     }
 
     // Calculate totals
@@ -60,13 +64,13 @@ export async function POST(req: Request) {
     const order = await prisma.order.create({
       data: {
         userId: userId,
-        status: "paid", // Instantly paid in our mock flow
+        status: "pending", // Manual UPI requires verification
         subtotal,
         shipping,
         tax,
         total,
         shippingAddressId: savedAddress.id,
-        paymentRef: `mock_ch_${Math.random().toString(36).substring(7)}`,
+        paymentRef: utr, // Store the UTR
         items: {
           create: items.map((item: any) => ({
             productId: item.id,

@@ -36,6 +36,7 @@ export default function CheckoutPage() {
       state: "CA", // Mock state for now
       postalCode: formData.get("postalCode") as string,
     }
+    const utr = formData.get("utr") as string
 
     try {
       const res = await fetch("/api/checkout", {
@@ -43,7 +44,8 @@ export default function CheckoutPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ 
           items: cart.items,
-          address: addressData
+          address: addressData,
+          utr: utr
         }),
       })
       const data = await res.json()
@@ -103,21 +105,49 @@ export default function CheckoutPage() {
               </div>
             </section>
 
-            {/* Payment (Mock) */}
+            {/* Payment (Manual UPI) */}
             <section className="space-y-6">
               <h2 className="font-serif text-xl border-b border-[var(--ink-900)]/10 pb-4">Payment</h2>
-              <div className="bg-white border border-[var(--border-subtle)] rounded-lg p-6 space-y-4">
-                <div className="flex gap-4">
-                  <input required type="text" name="cardNumber" placeholder="Card Number" pattern="\d{16}" maxLength={16} title="16 digit card number" className="w-full bg-white border border-[var(--border-subtle)] px-4 py-3 rounded-lg focus:outline-none focus:border-[var(--terracotta-400)] text-sm" />
+              <div className="bg-white border border-[var(--border-subtle)] rounded-lg p-6 space-y-6">
+                
+                <div className="flex flex-col md:flex-row items-center gap-6">
+                  <div className="shrink-0 bg-white p-2 border border-[var(--border-subtle)] rounded-xl shadow-sm">
+                    {/* Generate dynamic QR code using api.qrserver.com */}
+                    <img 
+                      src={`https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=upi://pay?pa=rudraherbals@upi&pn=Rudra%20Herbals&am=${cart.getTotal().toFixed(2)}&cu=INR`} 
+                      alt="UPI QR Code" 
+                      className="w-32 h-32"
+                    />
+                  </div>
+                  <div className="text-center md:text-left">
+                    <h3 className="font-bold text-[var(--forest-900)] mb-1">Pay with any UPI App</h3>
+                    <p className="text-sm opacity-80 mb-2">Scan the QR code to pay the exact amount of <strong>₹{cart.getTotal().toFixed(2)}</strong></p>
+                    <div className="inline-block bg-[var(--cream-100)] px-3 py-1.5 rounded text-xs font-mono font-medium border border-[var(--border-subtle)]">
+                      VPA: rudraherbals@upi
+                    </div>
+                  </div>
                 </div>
-                <div className="grid grid-cols-2 gap-4">
-                  <input required type="text" name="cardExpiry" placeholder="MM/YY" pattern="\d{2}/\d{2}" maxLength={5} title="MM/YY format" className="w-full bg-white border border-[var(--border-subtle)] px-4 py-3 rounded-lg focus:outline-none focus:border-[var(--terracotta-400)] text-sm" />
-                  <input required type="text" name="cardCvc" placeholder="CVC" pattern="\d{3,4}" maxLength={4} title="3 or 4 digit CVC" className="w-full bg-white border border-[var(--border-subtle)] px-4 py-3 rounded-lg focus:outline-none focus:border-[var(--terracotta-400)] text-sm" />
+
+                <div className="pt-4 border-t border-[var(--ink-900)]/5">
+                  <label className="block text-sm font-bold uppercase tracking-widest text-[var(--forest-900)] mb-2">
+                    Enter Transaction ID (UTR)
+                  </label>
+                  <input 
+                    required 
+                    type="text" 
+                    name="utr" 
+                    placeholder="12-Digit UPI Transaction ID" 
+                    pattern="\d{12}" 
+                    maxLength={12} 
+                    title="12 digit UTR number" 
+                    className="w-full bg-[var(--cream-50)] border border-[var(--border-subtle)] px-4 py-3 rounded-lg focus:outline-none focus:border-[var(--terracotta-400)] text-sm font-mono" 
+                  />
+                  <p className="text-xs opacity-60 mt-2">
+                    <Lock className="inline-block h-3 w-3 mr-1" />
+                    Your order will remain "Pending" until we manually verify this UTR.
+                  </p>
                 </div>
-                <p className="text-xs opacity-60 mt-2">
-                  <Lock className="inline-block h-3 w-3 mr-1" />
-                  This is a mock checkout. Any number pattern works (e.g. 1111222233334444, 12/26, 123).
-                </p>
+
               </div>
             </section>
           </div>
