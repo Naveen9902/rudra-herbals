@@ -15,9 +15,11 @@ export default function RitualsPage() {
         <p className="max-w-2xl mx-auto text-lg opacity-80 leading-relaxed mb-12">
           Ayurveda is the ancient science of life. It teaches us that true wellness comes from living in harmony with the natural elements that make up the universe and our bodies. Discover your unique elemental blueprint, or Dosha, to find your bespoke path to balance.
         </p>
-        <Button size="lg" className="bg-[var(--terracotta-400)] text-[var(--forest-950)] hover:bg-[var(--terracotta-500)] mb-24">
-          Take the Dosha Quiz
-        </Button>
+        <Link href="/quiz">
+          <Button size="lg" className="bg-[var(--terracotta-400)] text-[var(--forest-950)] hover:bg-[var(--terracotta-500)] mb-24">
+            Take the Dosha Quiz
+          </Button>
+        </Link>
 
         <div className="grid md:grid-cols-3 gap-8 text-left">
           {/* Vata */}
