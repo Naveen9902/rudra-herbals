@@ -101,7 +101,7 @@ export default function CheckoutPage() {
             
             <div className="space-y-4 mb-6 max-h-[40vh] overflow-y-auto pr-2">
               {cart.items.map((item) => (
-                <div key={item.id} className="flex gap-4 items-center">
+                <div key={item.cartItemId} className="flex gap-4 items-center">
                   <div className="w-16 h-16 bg-[var(--cream-100)] rounded overflow-hidden relative shrink-0">
                     <div className="absolute inset-0 bg-gradient-to-b from-transparent to-[var(--forest-800)]/10" />
                     <span className="absolute -top-2 -right-2 bg-[var(--forest-900)] text-[var(--ink-50)] w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold z-10">
