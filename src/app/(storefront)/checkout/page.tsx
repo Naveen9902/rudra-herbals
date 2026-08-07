@@ -110,6 +110,9 @@ export default function CheckoutPage() {
                   </div>
                   <div className="flex-1">
                     <h4 className="font-serif text-sm font-medium leading-tight mb-1">{item.name}</h4>
+                    {item.variantName && (
+                      <p className="text-[10px] opacity-80 uppercase mb-0.5">Size: {item.variantName}</p>
+                    )}
                     <p className="text-[10px] opacity-60 uppercase">{item.potency}</p>
                   </div>
                   <div className="text-sm font-medium">

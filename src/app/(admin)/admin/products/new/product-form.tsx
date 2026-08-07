@@ -14,11 +14,12 @@ export function ProductForm({ categories }: { categories: any[] }) {
     slug: "",
     shortDescription: "",
     longDescription: "",
-    price: "",
     potency: "Standard",
     categoryId: categories.length > 0 ? categories[0].id : "",
   })
   
+  const [variants, setVariants] = useState([{ name: "30 ml", price: "25.00" }])
+
   const [efficacy, setEfficacy] = useState([
     { title: "Cold-Extracted", description: "Processed below 118°F to preserve delicate volatile oils and therapeutic compounds." },
     { title: "Bioavailable", description: "Formulated with natural lipid carriers to ensure maximum cellular absorption." },
@@ -32,6 +33,21 @@ export function ProductForm({ categories }: { categories: any[] }) {
   ])
   
   const [imageFile, setImageFile] = useState<File | null>(null)
+
+  const handleVariantChange = (index: number, field: 'name' | 'price', value: string) => {
+    const newVariants = [...variants]
+    newVariants[index][field] = value
+    setVariants(newVariants)
+  }
+
+  const addVariant = () => setVariants([...variants, { name: "", price: "" }])
+  const removeVariant = (index: number) => {
+    if (variants.length > 1) {
+      const newVariants = [...variants]
+      newVariants.splice(index, 1)
+      setVariants(newVariants)
+    }
+  }
 
   const handleEfficacyChange = (index: number, field: 'title' | 'description', value: string) => {
     const newEfficacy = [...efficacy]
@@ -86,10 +102,18 @@ export function ProductForm({ categories }: { categories: any[] }) {
         throw new Error("Please upload a product image.")
       }
 
+      // Calculate lowest price for the base price
+      const validVariants = variants.filter(v => v.name && v.price)
+      if (validVariants.length === 0) throw new Error("At least one valid variant is required.")
+      
+      const parsedVariants = validVariants.map(v => ({ name: v.name, price: parseFloat(v.price) }))
+      const basePrice = Math.min(...parsedVariants.map(v => v.price))
+
       // 2. Create product
       const productResult = await createProduct({
         ...formData,
-        price: parseFloat(formData.price),
+        price: basePrice,
+        variants: JSON.stringify(parsedVariants),
         images: JSON.stringify([imageUrl]),
         efficacy: JSON.stringify(efficacy),
         ritual: JSON.stringify(ritual),
@@ -180,22 +204,7 @@ export function ProductForm({ categories }: { categories: any[] }) {
         />
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="space-y-2">
-          <label htmlFor="price" className="block text-sm font-medium text-gray-700">Price ($)</label>
-          <input 
-            type="number" 
-            id="price" 
-            name="price" 
-            min="0" 
-            step="0.01" 
-            required 
-            value={formData.price} 
-            onChange={handleChange}
-            className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-gray-900 focus:outline-none focus:ring-1 focus:ring-gray-900"
-          />
-        </div>
-
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="space-y-2">
           <label htmlFor="potency" className="block text-sm font-medium text-gray-700">Potency</label>
           <select 
@@ -227,6 +236,44 @@ export function ProductForm({ categories }: { categories: any[] }) {
             ))}
           </select>
         </div>
+      </div>
+
+      <div className="space-y-4 pt-6 border-t border-gray-200">
+        <div className="flex justify-between items-center">
+          <h3 className="text-lg font-medium text-gray-900">Sizes / Variants</h3>
+          <button type="button" onClick={addVariant} className="text-sm font-medium text-gray-900 hover:underline border border-gray-300 px-3 py-1 rounded-md">Add Size</button>
+        </div>
+        {variants.map((variant, index) => (
+          <div key={`var-${index}`} className="flex items-center gap-4">
+            <div className="flex-1">
+              <label className="block text-xs font-medium text-gray-700">Size Label (e.g. 30 ml)</label>
+              <input 
+                type="text" 
+                required
+                value={variant.name} 
+                onChange={(e) => handleVariantChange(index, 'name', e.target.value)}
+                className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-gray-900 focus:outline-none focus:ring-1 focus:ring-gray-900"
+              />
+            </div>
+            <div className="flex-1">
+              <label className="block text-xs font-medium text-gray-700">Price ($)</label>
+              <input 
+                type="number" 
+                min="0"
+                step="0.01"
+                required
+                value={variant.price} 
+                onChange={(e) => handleVariantChange(index, 'price', e.target.value)}
+                className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-gray-900 focus:outline-none focus:ring-1 focus:ring-gray-900"
+              />
+            </div>
+            {variants.length > 1 && (
+              <div className="pt-5">
+                <button type="button" onClick={() => removeVariant(index)} className="text-red-600 hover:text-red-800 font-bold p-2">✕</button>
+              </div>
+            )}
+          </div>
+        ))}
       </div>
 
       <div className="space-y-4 pt-6 border-t border-gray-200">

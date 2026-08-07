@@ -94,6 +94,7 @@ model Product {
   images           String // JSON string of URLs
   efficacy         String? // JSON string of array
   ritual           String? // JSON string of array
+  variants         String? // JSON string of array: [{ name: "30 ml", price: 25 }]
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
 
@@ -145,6 +146,7 @@ model CartItem {
   product           Product @relation(fields: [productId], references: [id], onDelete: Cascade)
   quantity          Int
   unitPriceSnapshot Float
+  variantName       String?
 }
 
 model Order {
@@ -174,6 +176,7 @@ model OrderItem {
   nameSnapshot  String
   priceSnapshot Float
   quantity      Int
+  variantName   String?
 }
 
 model Subscription {

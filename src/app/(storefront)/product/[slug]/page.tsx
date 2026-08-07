@@ -76,12 +76,7 @@ export default async function ProductPage({
               {product.name}
             </h1>
             
-            <div className="flex items-end gap-4 mb-8">
-              <span className="text-3xl font-medium">${product.price.toFixed(2)}</span>
-              {product.compareAtPrice && (
-                <span className="text-lg opacity-50 line-through pb-1">${product.compareAtPrice.toFixed(2)}</span>
-              )}
-            </div>
+            
             
             <div className="border-l-2 border-[var(--terracotta-400)] pl-6 mb-10">
               <p className="text-lg opacity-90 leading-relaxed">

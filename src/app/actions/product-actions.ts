@@ -60,6 +60,7 @@ export async function createProduct(data: {
         potency: data.potency,
         categoryId: data.categoryId,
         images: data.images, // JSON string of URLs e.g., '["/uploads/image.png"]'
+        variants: data.variants,
         efficacy: data.efficacy,
         ritual: data.ritual,
         isActive: true,

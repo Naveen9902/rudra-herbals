@@ -47,7 +47,7 @@ export function CartClient() {
           </div>
         ) : (
           cart.items.map((item) => (
-            <div key={item.id} className="grid grid-cols-1 sm:grid-cols-12 gap-6 items-center py-6 border-b border-[var(--ink-900)]/10">
+            <div key={item.cartItemId} className="grid grid-cols-1 sm:grid-cols-12 gap-6 items-center py-6 border-b border-[var(--ink-900)]/10">
               <div className="col-span-7 flex gap-6">
                 <div className="w-24 h-32 shrink-0 bg-[var(--cream-100)] rounded-lg overflow-hidden relative">
                   <div className="absolute inset-0 bg-gradient-to-b from-transparent to-[var(--forest-800)]/10" />
@@ -56,9 +56,12 @@ export function CartClient() {
                   <h3 className="font-serif text-lg font-medium text-[var(--forest-900)] mb-1">
                     {item.name}
                   </h3>
+                  {item.variantName && (
+                    <p className="text-sm font-medium opacity-80 mb-1">Size: {item.variantName}</p>
+                  )}
                   <p className="text-xs opacity-60 mb-2">Potency: {item.potency}</p>
                   <button 
-                    onClick={() => cart.removeItem(item.id)}
+                    onClick={() => cart.removeItem(item.cartItemId)}
                     className="text-xs flex items-center gap-1 text-[var(--terracotta-400)] hover:underline opacity-80 mt-auto"
                   >
                     <X className="h-3 w-3" /> Remove
@@ -68,7 +71,7 @@ export function CartClient() {
               <div className="col-span-3 flex justify-start sm:justify-center">
                 <QuantityStepper 
                   quantity={item.quantity} 
-                  onQuantityChange={(q: number) => cart.updateQuantity(item.id, q)} 
+                  onQuantityChange={(q: number) => cart.updateQuantity(item.cartItemId, q)} 
                   min={1} 
                   max={10} 
                 />
